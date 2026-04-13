@@ -1,0 +1,32 @@
+<!-- wp:template-part {"slug":"topbar","tagName":"header"} /-->
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|5xl","bottom":"var:preset|spacing|5xl"}}},"layout":{"type":"constrained","contentSize":"680px"}} -->
+<main class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--5xl);padding-bottom:var(--wp--preset--spacing--5xl)">
+	<!-- wp:paragraph {"align":"center","textColor":"gold","fontSize":"small","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.15em","fontWeight":"600"}}} -->
+	<p class="has-text-align-center has-gold-color has-text-color has-small-font-size" style="font-weight:600;letter-spacing:0.15em;text-transform:uppercase">404</p>
+	<!-- /wp:paragraph -->
+
+	<!-- wp:heading {"textAlign":"center","level":1,"fontSize":"hero","fontFamily":"fraunces","style":{"spacing":{"margin":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|lg"}}}} -->
+	<h1 class="wp-block-heading has-text-align-center has-fraunces-font-family has-hero-font-size" style="margin-top:var(--wp--preset--spacing--md);margin-bottom:var(--wp--preset--spacing--lg)">Page not found</h1>
+	<!-- /wp:heading -->
+
+	<!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"large"} -->
+	<p class="has-text-align-center has-muted-color has-text-color has-large-font-size">The page you're looking for may have moved or never existed. Here are a few places to go next.</p>
+	<!-- /wp:paragraph -->
+
+	<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","flexWrap":"wrap"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|xl"},"blockGap":"var:preset|spacing|md"}}} -->
+	<div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--xl)">
+		<!-- wp:button {"backgroundColor":"gold","textColor":"ink","style":{"border":{"radius":"12px"}}} -->
+		<div class="wp-block-button"><a class="wp-block-button__link has-ink-color has-gold-background-color has-text-color has-background wp-element-button" href="/" style="border-radius:12px">Back to home</a></div>
+		<!-- /wp:button -->
+
+		<!-- wp:button {"textColor":"navy","className":"is-style-outline","style":{"border":{"radius":"12px","width":"2px"}}} -->
+		<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-navy-color has-text-color wp-element-button" href="/contact/" style="border-width:2px;border-radius:12px">Contact us</a></div>
+		<!-- /wp:button -->
+	</div>
+	<!-- /wp:buttons -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
