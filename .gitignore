@@ -7,14 +7,24 @@
 wordpress_data/
 db_data/
 
-# WordPress runtime state that must never enter the repo
-wp-content/uploads/
+# WordPress runtime state — only commit the directory stubs, not the contents
 wp-content/upgrade/
 wp-content/cache/
 wp-content/backup*/
 wp-content/debug.log
-wp-content/plugins/
+
+# Plugins: ignore everything except the index.php silence stub
+wp-content/plugins/*
+!wp-content/plugins/index.php
+
+# Uploads: ignore everything except the index.php silence stub
+wp-content/uploads/*
+!wp-content/uploads/index.php
+
+# mu-plugins: ignored entirely (not used v1)
 wp-content/mu-plugins/
+
+# Themes: only commit the cadmous theme
 wp-content/themes/*
 !wp-content/themes/cadmous/
 
