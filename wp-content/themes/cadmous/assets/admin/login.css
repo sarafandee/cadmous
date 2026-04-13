@@ -1,0 +1,88 @@
+/**
+ * Cadmous-branded WordPress login screen.
+ *
+ * Applies the theme's navy + gold + warm-white tokens to the default
+ * login form. Loaded via cadmous_login_enqueue() on the login_enqueue_scripts
+ * hook.
+ */
+
+body.login {
+	background: #FAFAF7;
+	font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body.login #login {
+	padding-top: 8vh;
+}
+
+body.login h1 a {
+	background-image: url("../images/logo.png") !important;
+	background-size: contain !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+	width: 240px;
+	height: 80px;
+	margin-bottom: 24px;
+}
+
+body.login .login form {
+	background: #FFFFFF;
+	border: 1px solid #E5E1D8;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(26, 26, 26, 0.04);
+	padding: 32px 24px;
+}
+
+body.login .login label {
+	color: #1A1A1A;
+	font-weight: 500;
+}
+
+body.login .login form .input,
+body.login .login input[type="text"],
+body.login .login input[type="password"] {
+	background: #FAFAF7;
+	border: 1px solid #E5E1D8;
+	border-radius: 8px;
+	padding: 10px 12px;
+	font-size: 16px;
+	box-shadow: none;
+}
+
+body.login .login form .input:focus,
+body.login .login input[type="text"]:focus,
+body.login .login input[type="password"]:focus {
+	border-color: #C4933F;
+	box-shadow: 0 0 0 1px #C4933F;
+	outline: none;
+}
+
+body.login .button.button-primary {
+	background: #C4933F !important;
+	border-color: #C4933F !important;
+	color: #1A1A1A !important;
+	font-weight: 600;
+	border-radius: 8px;
+	padding: 8px 20px;
+	font-size: 15px;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+body.login .button.button-primary:hover,
+body.login .button.button-primary:focus {
+	background: #1B365D !important;
+	border-color: #1B365D !important;
+	color: #FAFAF7 !important;
+}
+
+body.login #nav a,
+body.login #backtoblog a {
+	color: #1B365D;
+	font-weight: 500;
+}
+
+body.login #nav a:hover,
+body.login #backtoblog a:hover {
+	color: #C4933F;
+}
