@@ -1,4 +1,16 @@
 /*
 Theme Name: Cadmous
+Theme URI: https://cadmous.edu.lb
+Author: Cadmous College
+Author URI: https://cadmous.edu.lb
+Description: Custom 2026 block theme for Cadmous College, an IB World School in Tyre, Lebanon. Full Site Editing driven by theme.json design tokens, self-hosted fonts (Fraunces + DM Sans), editor lockdown for non-technical staff, Polylang-ready for EN/FR/AR.
 Version: 0.1.0
+Requires at least: 6.4
+Tested up to: 6.9
+Requires PHP: 8.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: cadmous
+Domain Path: /languages
+Tags: block-theme, full-site-editing, one-column, custom-colors, custom-logo, custom-menu, featured-images, rtl-language-support, translation-ready, education
 */
