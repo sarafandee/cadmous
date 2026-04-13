@@ -1,0 +1,38 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Docker volumes (if ever bind-mounted during debugging)
+wordpress_data/
+db_data/
+
+# WordPress runtime state that must never enter the repo
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/backup*/
+wp-content/debug.log
+wp-content/plugins/
+wp-content/mu-plugins/
+wp-content/themes/*
+!wp-content/themes/cadmous/
+
+# Theme build output
+wp-content/themes/cadmous/node_modules/
+wp-content/themes/cadmous/vendor/
+wp-content/themes/cadmous/build/
+wp-content/themes/cadmous/dist/
+wp-content/themes/cadmous/.phpcs-cache
+wp-content/themes/cadmous/*.log
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code local overrides
+.claude/settings.local.json
+.gstack/
