@@ -13,6 +13,13 @@ services:
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
       WORDPRESS_DEBUG: 1
+      WPMS_ON: ${WPMS_ON:-false}
+      WPMS_MAIL_FROM: ${WPMS_MAIL_FROM:-noreply@cadmous.edu.lb}
+      WPMS_MAIL_FROM_NAME: ${WPMS_MAIL_FROM_NAME:-Cadmous College}
+      WPMS_MAILER: ${WPMS_MAILER:-mail}
+      WPMS_OUTLOOK_CLIENT_ID: ${M365_CLIENT_ID:-}
+      WPMS_OUTLOOK_CLIENT_SECRET: ${M365_CLIENT_SECRET:-}
+      WPMS_OUTLOOK_TENANT_ID: ${M365_TENANT_ID:-}
       WORDPRESS_CONFIG_EXTRA: |
         define( 'WP_DEBUG_LOG', true );
         define( 'WP_DEBUG_DISPLAY', false );
@@ -20,6 +27,18 @@ services:
         define( 'DISALLOW_FILE_EDIT', true );
         define( 'DISALLOW_FILE_MODS', false );
         define( 'WP_AUTO_UPDATE_CORE', 'minor' );
+        // WP Mail SMTP — env-driven so credentials never touch the DB.
+        if ( getenv( 'WPMS_ON' ) === 'true' ) {
+            define( 'WPMS_ON', true );
+            define( 'WPMS_MAIL_FROM', getenv( 'WPMS_MAIL_FROM' ) );
+            define( 'WPMS_MAIL_FROM_NAME', getenv( 'WPMS_MAIL_FROM_NAME' ) );
+            define( 'WPMS_MAILER', getenv( 'WPMS_MAILER' ) );
+            if ( getenv( 'WPMS_MAILER' ) === 'outlook' ) {
+                define( 'WPMS_OUTLOOK_CLIENT_ID', getenv( 'WPMS_OUTLOOK_CLIENT_ID' ) );
+                define( 'WPMS_OUTLOOK_CLIENT_SECRET', getenv( 'WPMS_OUTLOOK_CLIENT_SECRET' ) );
+                define( 'WPMS_OUTLOOK_TENANT_ID', getenv( 'WPMS_OUTLOOK_TENANT_ID' ) );
+            }
+        }
     volumes:
       - wordpress_data:/var/www/html
       - ./wp-content/themes/cadmous:/var/www/html/wp-content/themes/cadmous
