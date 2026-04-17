@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "divisions": "الأقسام",
+    "admissions": "القبول",
+    "news": "الأخبار",
+    "events": "الفعاليات",
+    "gallery": "معرض الصور",
+    "contact": "اتصل بنا"
+  },
+  "common": {
+    "readMore": "اقرأ المزيد",
+    "viewAll": "عرض الكل",
+    "apply": "قدّم الآن",
+    "submit": "إرسال",
+    "next": "التالي",
+    "previous": "السابق",
+    "back": "رجوع",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "noResults": "لا توجد نتائج",
+    "translationNotAvailable": "هذا المحتوى غير متوفر باللغة العربية"
+  },
+  "home": {
+    "hero": "أهلاً بكم في مدرسة قدموس",
+    "heroSubtitle": "مدرسة البكالوريا الدولية",
+    "upcomingEvents": "الفعاليات القادمة",
+    "latestNews": "آخر الأخبار",
+    "todayAtCadmous": "اليوم في قدموس"
+  },
+  "admissions": {
+    "title": "القبول",
+    "applyNow": "قدّم الآن",
+    "requirements": "المتطلبات",
+    "step": "الخطوة",
+    "of": "من",
+    "studentInfo": "معلومات الطالب",
+    "previousSchool": "المدرسة السابقة",
+    "guardian1": "ولي الأمر ١",
+    "guardian2": "ولي الأمر ٢",
+    "siblingsEmergency": "الأشقاء والطوارئ",
+    "review": "مراجعة وإرسال",
+    "confirmationTitle": "تم تقديم الطلب",
+    "confirmationMessage": "شكراً لتقديم طلبكم. سنتواصل معكم قريباً."
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "message": "الرسالة",
+    "send": "إرسال الرسالة",
+    "success": "شكراً لاستفساركم. نرد عادةً خلال يومي عمل."
+  },
+  "footer": {
+    "copyright": "© {year} مدرسة قدموس. جميع الحقوق محفوظة.",
+    "ibWorldSchool": "مدرسة البكالوريا الدولية"
+  }
+}

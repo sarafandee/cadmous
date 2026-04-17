@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "divisions": "Divisions",
+    "admissions": "Admissions",
+    "news": "Actualités",
+    "events": "Événements",
+    "gallery": "Galerie",
+    "contact": "Contactez-nous"
+  },
+  "common": {
+    "readMore": "Lire la suite",
+    "viewAll": "Voir tout",
+    "apply": "Postuler maintenant",
+    "submit": "Envoyer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "back": "Retour",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "noResults": "Aucun résultat trouvé",
+    "translationNotAvailable": "Ce contenu n'est pas disponible en français"
+  },
+  "home": {
+    "hero": "Bienvenue au Collège Cadmous",
+    "heroSubtitle": "École du monde de l'IB",
+    "upcomingEvents": "Événements à venir",
+    "latestNews": "Dernières actualités",
+    "todayAtCadmous": "Aujourd'hui à Cadmous"
+  },
+  "admissions": {
+    "title": "Admissions",
+    "applyNow": "Postuler maintenant",
+    "requirements": "Conditions requises",
+    "step": "Étape",
+    "of": "sur",
+    "studentInfo": "Informations de l'élève",
+    "previousSchool": "École précédente",
+    "guardian1": "Tuteur 1",
+    "guardian2": "Tuteur 2",
+    "siblingsEmergency": "Frères et sœurs et urgences",
+    "review": "Vérification et envoi",
+    "confirmationTitle": "Candidature soumise",
+    "confirmationMessage": "Merci pour votre candidature. Nous vous contacterons bientôt."
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "message": "Message",
+    "send": "Envoyer le message",
+    "success": "Merci pour votre demande. Nous répondons généralement dans les 2 jours ouvrables."
+  },
+  "footer": {
+    "copyright": "© {year} Collège Cadmous. Tous droits réservés.",
+    "ibWorldSchool": "École du monde de l'IB"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "divisions": "Divisions",
+    "admissions": "Admissions",
+    "news": "News",
+    "events": "Events",
+    "gallery": "Gallery",
+    "contact": "Contact Us"
+  },
+  "common": {
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "apply": "Apply Now",
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noResults": "No results found",
+    "translationNotAvailable": "This content is not available in English"
+  },
+  "home": {
+    "hero": "Welcome to Cadmous College",
+    "heroSubtitle": "IB World School",
+    "upcomingEvents": "Upcoming Events",
+    "latestNews": "Latest News",
+    "todayAtCadmous": "Today at Cadmous"
+  },
+  "admissions": {
+    "title": "Admissions",
+    "applyNow": "Apply Now",
+    "requirements": "Requirements",
+    "step": "Step",
+    "of": "of",
+    "studentInfo": "Student Information",
+    "previousSchool": "Previous School",
+    "guardian1": "Guardian 1",
+    "guardian2": "Guardian 2",
+    "siblingsEmergency": "Siblings & Emergency",
+    "review": "Review & Submit",
+    "confirmationTitle": "Application Submitted",
+    "confirmationMessage": "Thank you for your application. We will contact you soon."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send Message",
+    "success": "Thank you for your inquiry. We typically respond within 2 business days."
+  },
+  "footer": {
+    "copyright": "© {year} Cadmous College. All rights reserved.",
+    "ibWorldSchool": "IB World School"
+  }
+}
