@@ -122,7 +122,16 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
-    slugField(),
+    {
+      ...slugField(),
+      validate: (value: string | null | undefined) => {
+        const reserved = ['news', 'events', 'gallery', 'admissions', 'contact', 'admin', 'api', 'search']
+        if (value && reserved.includes(value)) {
+          return `"${value}" is a reserved slug and cannot be used for pages.`
+        }
+        return true
+      },
+    },
   ],
   hooks: {
     afterChange: [revalidatePage],

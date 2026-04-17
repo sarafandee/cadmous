@@ -1,31 +1,15 @@
-version: '3'
-
 services:
-  payload:
-    image: node:18-alpine
+  cadmous:
+    build: .
     ports:
       - '3000:3000'
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
+      - cadmous-data:/app/data
+      - cadmous-media:/app/media
     env_file:
       - .env
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
+    restart: unless-stopped
 
 volumes:
-  data:
-  node_modules:
+  cadmous-data:
+  cadmous-media:
