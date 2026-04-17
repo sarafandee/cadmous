@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    'application-submissions': ApplicationSubmission;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +95,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'application-submissions': ApplicationSubmissionsSelect<false> | ApplicationSubmissionsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -783,6 +785,96 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "application-submissions".
+ */
+export interface ApplicationSubmission {
+  id: number;
+  status?: ('new' | 'reviewing' | 'interview' | 'accepted' | 'waitlisted' | 'declined') | null;
+  submissionLocale?: ('ar' | 'en' | 'fr') | null;
+  studentFirstName: string;
+  studentMiddleName: string;
+  studentFamilyName: string;
+  studentGender: 'male' | 'female';
+  studentDOB: string;
+  studentPlaceOfBirth: string;
+  studentNationality: string;
+  studentSecondNationality?: string | null;
+  requiresTransportation: 'yes' | 'no';
+  gradeApplying: string;
+  previousSchool?: string | null;
+  previousSchoolCountry?: string | null;
+  previousGradeLevel: string;
+  languagesSpokenAtHome: string;
+  hasSkippedOrRepeated: 'yes' | 'no';
+  skippedOrRepeatedDetails?: string | null;
+  hasSpecialNeeds: 'yes' | 'no';
+  specialNeedsDetails?: string | null;
+  guardian1FullName: string;
+  guardian1Relationship: string;
+  guardian1Nationality: string;
+  guardian1Occupation?: string | null;
+  guardian1Company?: string | null;
+  guardian1BusinessAddress?: string | null;
+  guardian1BusinessEmail?: string | null;
+  guardian1BusinessPhone?: string | null;
+  guardian1PhoneExtension?: string | null;
+  guardian1HomeAddress?: string | null;
+  guardian1PersonalEmail?: string | null;
+  guardian1HomePhone: string;
+  guardian1Mobile: string;
+  guardian1ReceiveSMS?: ('yes' | 'no') | null;
+  guardian2FullName?: string | null;
+  guardian2Relationship?: string | null;
+  guardian2Nationality?: string | null;
+  guardian2Occupation?: string | null;
+  guardian2Company?: string | null;
+  guardian2BusinessAddress?: string | null;
+  guardian2BusinessEmail?: string | null;
+  guardian2BusinessPhone?: string | null;
+  guardian2PhoneExtension?: string | null;
+  guardian2HomeAddress?: string | null;
+  guardian2PersonalEmail?: string | null;
+  guardian2HomePhone?: string | null;
+  guardian2Mobile?: string | null;
+  selectGuardian?: ('guardian1' | 'guardian2') | null;
+  familyStatus?: ('married' | 'separated' | 'divorced' | 'widowed') | null;
+  custodyHolder?: ('guardian1' | 'guardian2' | 'shared') | null;
+  siblings?:
+    | {
+        name?: string | null;
+        grade?: string | null;
+        school?: string | null;
+        academicYear?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  hasSiblingsAtCadmous?: ('yes' | 'no') | null;
+  siblingsAtCadmousYear?: string | null;
+  emergency1Name: string;
+  emergency1Relationship: string;
+  emergency1Phone: string;
+  emergency2Name: string;
+  emergency2Relationship: string;
+  emergency2Phone: string;
+  documents?:
+    | {
+        file?: (number | null) | Media;
+        documentType?:
+          | ('passport' | 'photo' | 'report-card' | 'medical' | 'passing-certificate' | 'brevet' | 'other')
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  confirmationAcknowledged?: boolean | null;
+  /**
+   * Internal notes about this application
+   */
+  adminNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -990,6 +1082,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'application-submissions';
+        value: number | ApplicationSubmission;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1355,6 +1451,90 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "application-submissions_select".
+ */
+export interface ApplicationSubmissionsSelect<T extends boolean = true> {
+  status?: T;
+  submissionLocale?: T;
+  studentFirstName?: T;
+  studentMiddleName?: T;
+  studentFamilyName?: T;
+  studentGender?: T;
+  studentDOB?: T;
+  studentPlaceOfBirth?: T;
+  studentNationality?: T;
+  studentSecondNationality?: T;
+  requiresTransportation?: T;
+  gradeApplying?: T;
+  previousSchool?: T;
+  previousSchoolCountry?: T;
+  previousGradeLevel?: T;
+  languagesSpokenAtHome?: T;
+  hasSkippedOrRepeated?: T;
+  skippedOrRepeatedDetails?: T;
+  hasSpecialNeeds?: T;
+  specialNeedsDetails?: T;
+  guardian1FullName?: T;
+  guardian1Relationship?: T;
+  guardian1Nationality?: T;
+  guardian1Occupation?: T;
+  guardian1Company?: T;
+  guardian1BusinessAddress?: T;
+  guardian1BusinessEmail?: T;
+  guardian1BusinessPhone?: T;
+  guardian1PhoneExtension?: T;
+  guardian1HomeAddress?: T;
+  guardian1PersonalEmail?: T;
+  guardian1HomePhone?: T;
+  guardian1Mobile?: T;
+  guardian1ReceiveSMS?: T;
+  guardian2FullName?: T;
+  guardian2Relationship?: T;
+  guardian2Nationality?: T;
+  guardian2Occupation?: T;
+  guardian2Company?: T;
+  guardian2BusinessAddress?: T;
+  guardian2BusinessEmail?: T;
+  guardian2BusinessPhone?: T;
+  guardian2PhoneExtension?: T;
+  guardian2HomeAddress?: T;
+  guardian2PersonalEmail?: T;
+  guardian2HomePhone?: T;
+  guardian2Mobile?: T;
+  selectGuardian?: T;
+  familyStatus?: T;
+  custodyHolder?: T;
+  siblings?:
+    | T
+    | {
+        name?: T;
+        grade?: T;
+        school?: T;
+        academicYear?: T;
+        id?: T;
+      };
+  hasSiblingsAtCadmous?: T;
+  siblingsAtCadmousYear?: T;
+  emergency1Name?: T;
+  emergency1Relationship?: T;
+  emergency1Phone?: T;
+  emergency2Name?: T;
+  emergency2Relationship?: T;
+  emergency2Phone?: T;
+  documents?:
+    | T
+    | {
+        file?: T;
+        documentType?: T;
+        id?: T;
+      };
+  confirmationAcknowledged?: T;
+  adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
