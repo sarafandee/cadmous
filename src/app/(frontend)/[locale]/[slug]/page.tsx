@@ -17,29 +17,34 @@ import { getPayloadLocale } from '@/i18n/payload-locale'
 import { routing } from '@/i18n/routing'
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'pages',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const pages = await payload.find({
+      collection: 'pages',
+      draft: false,
+      limit: 1000,
+      overrideAccess: false,
+      pagination: false,
+      select: {
+        slug: true,
+      },
+    })
 
-  const params: { locale: string; slug: string }[] = []
+    const params: { locale: string; slug: string }[] = []
 
-  for (const locale of routing.locales) {
-    for (const doc of pages.docs) {
-      if (doc.slug && doc.slug !== 'home') {
-        params.push({ locale, slug: doc.slug })
+    for (const locale of routing.locales) {
+      for (const doc of pages.docs) {
+        if (doc.slug && doc.slug !== 'home') {
+          params.push({ locale, slug: doc.slug })
+        }
       }
     }
-  }
 
-  return params
+    return params
+  } catch {
+    // DB not available during Docker build - pages will render dynamically
+    return []
+  }
 }
 
 type Args = {
