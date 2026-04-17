@@ -7,6 +7,11 @@ import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { TextImage } from '../../blocks/TextImage/config'
+import { StaffProfile } from '../../blocks/StaffProfile/config'
+import { StatsCounter } from '../../blocks/StatsCounter/config'
+import { Accordion } from '../../blocks/Accordion/config'
+import { EmbedMap } from '../../blocks/EmbedMap/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -72,7 +77,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, TextImage, StaffProfile, StatsCounter, Accordion, EmbedMap],
               required: true,
               admin: {
                 initCollapsed: true,

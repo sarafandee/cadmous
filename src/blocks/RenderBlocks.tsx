@@ -7,6 +7,11 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { TextImageBlock } from '@/blocks/TextImage/Component'
+import { StaffProfileBlock } from '@/blocks/StaffProfile/Component'
+import { StatsCounterBlock } from '@/blocks/StatsCounter/Component'
+import { AccordionBlock } from '@/blocks/Accordion/Component'
+import { EmbedMapBlock } from '@/blocks/EmbedMap/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -14,6 +19,11 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  textImage: TextImageBlock,
+  staffProfile: StaffProfileBlock,
+  statsCounter: StatsCounterBlock,
+  accordion: AccordionBlock,
+  embedMap: EmbedMapBlock,
 }
 
 export const RenderBlocks: React.FC<{
