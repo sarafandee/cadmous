@@ -12,6 +12,7 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { getLocale } from 'next-intl/server'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -19,8 +20,16 @@ import { getServerSideURL } from '@/utilities/getURL'
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
+  const locale = await getLocale()
+  const dir = locale === 'ar' ? 'rtl' : 'ltr'
+
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} suppressHydrationWarning>
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang={locale}
+      dir={dir}
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
