@@ -1,7 +1,5 @@
 'use server'
 
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { z } from 'zod'
 
 const contactSchema = z.object({
@@ -12,9 +10,7 @@ const contactSchema = z.object({
   website: z.string().max(0, 'Invalid submission').optional(), // honeypot
 })
 
-export type ContactResult =
-  | { success: true }
-  | { success: false; error: string }
+export type ContactResult = { success: true } | { success: false; error: string }
 
 export async function submitContactForm(formData: FormData): Promise<ContactResult> {
   const raw = {
@@ -25,7 +21,6 @@ export async function submitContactForm(formData: FormData): Promise<ContactResu
     website: formData.get('website') as string,
   }
 
-  // Honeypot check
   if (raw.website) {
     return { success: false, error: 'Invalid submission' }
   }
@@ -35,17 +30,9 @@ export async function submitContactForm(formData: FormData): Promise<ContactResu
     return { success: false, error: parsed.error.issues[0]?.message || 'Validation failed' }
   }
 
-  try {
-    const payload = await getPayload({ config: configPromise })
+  // TODO: wire to your own backend (email, database, etc.)
+  // For now this just logs the submission server-side.
+  console.log('[contact] submission received:', parsed.data)
 
-    await payload.create({
-      collection: 'contact-inquiries',
-      data: parsed.data,
-    })
-
-    return { success: true }
-  } catch (error) {
-    console.error('Contact form error:', error)
-    return { success: false, error: 'An error occurred. Please try again.' }
-  }
+  return { success: true }
 }

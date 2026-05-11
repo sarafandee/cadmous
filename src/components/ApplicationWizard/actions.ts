@@ -1,7 +1,5 @@
 'use server'
 
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { fullApplicationSchema, type ApplicationFormData } from './schema'
 
 export type SubmitResult =
@@ -23,24 +21,8 @@ export async function submitApplication(
     return { success: false, errors }
   }
 
-  try {
-    const payload = await getPayload({ config: configPromise })
+  // TODO: wire to your own backend (email, database, etc.)
+  console.log('[admissions] submission received (locale=' + locale + '):', parsed.data)
 
-    const doc = await payload.create({
-      collection: 'application-submissions',
-      data: {
-        ...parsed.data,
-        submissionLocale: locale as 'ar' | 'en' | 'fr',
-        status: 'new',
-      },
-    })
-
-    return { success: true, id: doc.id as number }
-  } catch (error) {
-    console.error('Application submission error:', error)
-    return {
-      success: false,
-      errors: { _form: 'An error occurred while submitting your application. Please try again.' },
-    }
-  }
+  return { success: true, id: Date.now() }
 }

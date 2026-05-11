@@ -1,64 +1,70 @@
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
-import { cache } from 'react'
-import { getPayloadLocale } from '@/i18n/payload-locale'
-import { formatDateTime } from '@/utilities/formatDateTime'
-import RichText from '@/components/RichText'
-import { Media } from '@/components/Media'
+import { PageHeader, Section } from '@/components/CadmousUI'
+import { getNewsBySlug } from '@/data/news'
 
 type Args = {
   params: Promise<{ locale: string; slug: string }>
+}
+
+const BC: Record<string, { more: string; news: string }> = {
+  en: { more: 'More', news: 'News' },
+  fr: { more: 'Plus', news: 'Actualités' },
+  ar: { more: 'المزيد', news: 'الأخبار' },
 }
 
 export default async function NewsDetailPage({ params }: Args) {
   const { locale, slug } = await params
   setRequestLocale(locale)
 
-  const post = await queryPostBySlug({ slug, locale: getPayloadLocale(locale) })
-
+  const post = getNewsBySlug(locale, slug)
   if (!post) notFound()
+  const bc = BC[locale] || BC.en
+
+  const dateFmt = new Date(post.publishedAt).toLocaleDateString(locale, {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
 
   return (
-    <article className="container mx-auto max-w-3xl px-4 py-16">
-      {post.heroImage && typeof post.heroImage === 'object' && (
-        <div className="mb-8 overflow-hidden rounded-lg">
-          <Media resource={post.heroImage} />
-        </div>
-      )}
-
-      <h1 className="mb-4 text-4xl font-bold">{post.title}</h1>
-
-      {post.publishedAt && (
-        <time className="mb-8 block text-gray-500">
-          {formatDateTime(post.publishedAt)}
-        </time>
-      )}
-
-      {post.content && <RichText data={post.content} />}
-    </article>
+    <>
+      <PageHeader
+        locale={locale}
+        title={post.title}
+        breadcrumb={[
+          { label: bc.more },
+          { label: bc.news, href: `/${locale}/news` },
+          { label: post.title },
+        ]}
+        lede={post.summary}
+      />
+      <Section>
+        <article className="mx-auto max-w-3xl">
+          <div className="mb-6 text-[12px] tracking-[0.06em] text-white/40">{dateFmt}</div>
+          {post.image && (
+            <div className="mb-8 overflow-hidden rounded-[6px] border border-white/10">
+              <img src={post.image} alt="" className="w-full" />
+            </div>
+          )}
+          {post.body && (
+            <div className="whitespace-pre-line text-[17px] leading-[1.75] text-white/70">
+              {post.body}
+            </div>
+          )}
+        </article>
+      </Section>
+    </>
   )
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale, slug } = await params
-  const post = await queryPostBySlug({ slug, locale: getPayloadLocale(locale) })
+  const post = getNewsBySlug(locale, slug)
   return {
     title: post ? `${post.title} | Cadmous College` : 'Not Found',
   }
 }
-
-const queryPostBySlug = cache(async ({ slug, locale }: { slug: string; locale: string }) => {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'posts',
-    locale: locale as any,
-    limit: 1,
-    where: { slug: { equals: slug } },
-  })
-  return result.docs?.[0] || null
-})

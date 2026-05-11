@@ -16,9 +16,6 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Create data directory so Payload can initialize SQLite during build
-RUN mkdir -p /app/data
-
 RUN corepack enable pnpm && pnpm run build
 
 # Production
@@ -39,13 +36,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Create directories for persistent data (mounted as volumes)
-RUN mkdir -p /app/data /app/media && chown -R nextjs:nodejs /app/data /app/media
-
 USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
-ENV DATABASE_URI=file:/app/data/cadmous.db
 
 CMD ["node", "server.js"]

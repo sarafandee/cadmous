@@ -66,6 +66,9 @@
   --color-gold-700: #66520c;
   --color-gold-800: #403308;
   --color-gold-900: #1a1503;
+  --color-crimson-400: #e06464;
+  --color-crimson-500: #c54040;
+  --color-crimson-600: #a83434;
 }
 
 @layer utilities {

@@ -3,28 +3,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-import type { Header } from '@/payload-types'
-
-import { HeaderNav } from './Nav'
 import { LanguageToggle } from '@/components/LanguageToggle'
 
-interface HeaderClientProps {
-  data: Header
-}
-
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
+export const HeaderClient: React.FC = () => {
   const pathname = usePathname()
-  const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
-  // Extract locale from pathname
   const locale = pathname.split('/')[1] || 'ar'
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     setIsMobileOpen(false)
@@ -32,58 +17,70 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
   const navLinks = [
     { href: `/${locale}`, label: locale === 'ar' ? 'الرئيسية' : locale === 'fr' ? 'Accueil' : 'Home' },
-    { href: `/${locale}/about`, label: locale === 'ar' ? 'من نحن' : locale === 'fr' ? 'À propos' : 'About' },
+    {
+      href: `/${locale}/vision-mission`,
+      label: locale === 'ar' ? 'من نحن' : locale === 'fr' ? 'À propos' : 'About',
+    },
+    {
+      href: `/${locale}/kindergarten`,
+      label: locale === 'ar' ? 'الأقسام' : locale === 'fr' ? 'Divisions' : 'Divisions',
+    },
+    {
+      href: `/${locale}/requirements`,
+      label: locale === 'ar' ? 'القبول' : locale === 'fr' ? 'Admissions' : 'Admissions',
+    },
     { href: `/${locale}/news`, label: locale === 'ar' ? 'الأخبار' : locale === 'fr' ? 'Actualités' : 'News' },
-    { href: `/${locale}/events`, label: locale === 'ar' ? 'الفعاليات' : locale === 'fr' ? 'Événements' : 'Events' },
-    { href: `/${locale}/gallery`, label: locale === 'ar' ? 'معرض الصور' : locale === 'fr' ? 'Galerie' : 'Gallery' },
-    { href: `/${locale}/admissions`, label: locale === 'ar' ? 'القبول' : locale === 'fr' ? 'Admissions' : 'Admissions' },
-    { href: `/${locale}/contact`, label: locale === 'ar' ? 'اتصل بنا' : locale === 'fr' ? 'Contact' : 'Contact' },
+    {
+      href: `/${locale}/events`,
+      label: locale === 'ar' ? 'الفعاليات' : locale === 'fr' ? 'Événements' : 'Events',
+    },
+    {
+      href: `/${locale}/contact`,
+      label: locale === 'ar' ? 'اتصل بنا' : locale === 'fr' ? 'Contact' : 'Contact',
+    },
   ]
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 shadow-sm backdrop-blur-sm' : 'bg-white'
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
-          {/* Logo / School Name */}
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy-900/90 backdrop-blur-md">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)]">
+        <div className="flex items-center justify-between py-3.5">
           <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className="text-lg font-bold text-navy-800">
+            <div className="grid h-9 w-9 place-items-center rounded-[6px] border border-crimson-400 bg-crimson-500/10 text-[16px] font-bold tracking-[0.04em] text-crimson-400">
+              C
+            </div>
+            <div className="leading-tight">
+              <div className="text-[17px] font-bold tracking-[0.005em] text-white">
                 {locale === 'ar' ? 'مدرسة قدموس' : 'Cadmous College'}
-              </span>
-              <span className="text-xs font-medium uppercase tracking-wider text-gold-500">
+              </div>
+              <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white/40">
                 IB World School
-              </span>
+              </div>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 lg:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-[4px] px-3 py-2 text-[13.5px] font-medium transition-colors ${
                   pathname === link.href
-                    ? 'bg-navy-50 text-navy-800'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-navy-800'
+                    ? 'text-white'
+                    : 'text-white/60 hover:text-white'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="ms-3 border-s border-gray-200 ps-3">
+            <div className="ms-3 border-s border-white/10 ps-3">
               <LanguageToggle />
             </div>
           </nav>
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="rounded-md p-2 text-gray-600 hover:bg-gray-50 lg:hidden"
+            className="rounded-md p-2 text-white/70 hover:bg-white/5 lg:hidden"
+            aria-label="Toggle menu"
           >
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {isMobileOpen ? (
@@ -95,24 +92,21 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileOpen && (
-          <nav className="border-t border-gray-100 pb-4 lg:hidden">
+          <nav className="border-t border-white/10 pb-4 lg:hidden">
             <div className="flex flex-col gap-1 pt-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={`rounded-md px-3 py-2 text-sm font-medium ${
-                    pathname === link.href
-                      ? 'bg-navy-50 text-navy-800'
-                      : 'text-gray-600 hover:bg-gray-50'
+                    pathname === link.href ? 'bg-white/5 text-white' : 'text-white/70'
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="mt-2 border-t border-gray-100 pt-2">
+              <div className="mt-2 border-t border-white/10 pt-2">
                 <LanguageToggle />
               </div>
             </div>
