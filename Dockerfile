@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable pnpm && pnpm i --frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm i --frozen-lockfile
 
 # Build
 FROM base AS builder
@@ -16,7 +16,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN corepack enable pnpm && pnpm run build
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run build
 
 # Production
 FROM base AS runner

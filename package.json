@@ -4,6 +4,7 @@
   "description": "Cadmous College - IB World School Website",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs",
