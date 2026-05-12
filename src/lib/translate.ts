@@ -1,22 +1,22 @@
 import 'server-only'
 
-import Anthropic from '@anthropic-ai/sdk'
-
 import type { Locale } from '@/i18n/routing'
 
-const MODEL = 'claude-haiku-4-5-20251001'
+const DEFAULT_MODEL = 'google/gemini-2.5-flash-lite'
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-let _client: Anthropic | null = null
-function client(): Anthropic {
-  if (_client) return _client
-  const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) {
+function model(): string {
+  return process.env.OPENROUTER_MODEL?.trim() || DEFAULT_MODEL
+}
+
+function apiKey(): string {
+  const key = process.env.OPENROUTER_API_KEY
+  if (!key) {
     throw new Error(
-      'ANTHROPIC_API_KEY is not set — admin translation requires it. Set it in .env or in your deployment env.',
+      'OPENROUTER_API_KEY is not set — admin translation requires it. Set it in .env or in your deployment env.',
     )
   }
-  _client = new Anthropic({ apiKey })
-  return _client
+  return key
 }
 
 const LANG_NAMES: Record<Locale, string> = {
@@ -44,6 +44,11 @@ export type TranslateFieldInput = {
   context?: string
 }
 
+type ChatResponse = {
+  choices?: { message?: { content?: string } }[]
+  error?: { message?: string }
+}
+
 export async function translateField({
   text,
   from,
@@ -58,21 +63,35 @@ export async function translateField({
     (context ? `\n\nContext: ${context}` : '') +
     `\n\nText:\n${text}`
 
-  const response = await client().messages.create({
-    model: MODEL,
-    max_tokens: Math.max(1024, Math.ceil(text.length * 2)),
-    system: [
-      {
-        type: 'text',
-        text: SYSTEM_PROMPT,
-        cache_control: { type: 'ephemeral' },
-      },
-    ],
-    messages: [{ role: 'user', content: userPrompt }],
+  const res = await fetch(OPENROUTER_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey()}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://cadmous.offplate.ai',
+      'X-Title': 'Cadmous Admin',
+    },
+    body: JSON.stringify({
+      model: model(),
+      max_tokens: Math.max(1024, Math.ceil(text.length * 2)),
+      temperature: 0.2,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt },
+      ],
+    }),
   })
 
-  const block = response.content.find((c) => c.type === 'text')
-  return block?.type === 'text' ? block.text.trim() : ''
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`OpenRouter ${res.status}: ${body.slice(0, 500)}`)
+  }
+
+  const data = (await res.json()) as ChatResponse
+  if (data.error) {
+    throw new Error(`OpenRouter error: ${data.error.message ?? 'unknown'}`)
+  }
+  return (data.choices?.[0]?.message?.content ?? '').trim()
 }
 
 export type TranslateFieldsInput = {
