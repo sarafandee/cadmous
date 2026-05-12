@@ -55,7 +55,7 @@ export function ApplicationPageShell({
               {(['en', 'fr', 'ar'] as Lang[]).map((l) => (
                 <Link
                   key={l}
-                  href={`/${locale}/application-${l}`}
+                  href={`/${locale}/application/${l}`}
                   className={`rounded-[4px] border px-3 py-1.5 text-xs font-semibold transition ${
                     l === lang
                       ? 'border-crimson-400 bg-crimson-500/15 text-crimson-400'
