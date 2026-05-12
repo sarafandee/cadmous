@@ -8,5 +8,9 @@ node /app/scripts/migrate.mjs
 # ADMIN_EMAIL/ADMIN_PASSWORD aren't set in the environment.
 node /app/scripts/seed-admin.mjs || echo "[entrypoint] seed-admin exited non-zero; continuing"
 
+# First-boot only: seed scraped news + events into the DB. The --if-empty
+# flag makes this a no-op once news_posts or events have any rows.
+node /app/scripts/seed-news-events.mjs --if-empty || echo "[entrypoint] seed-news-events exited non-zero; continuing"
+
 # Hand off to the Next.js standalone server.
 exec node /app/server.js

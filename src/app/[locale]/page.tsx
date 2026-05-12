@@ -9,8 +9,7 @@ type Args = {
   params: Promise<{ locale: string }>
 }
 
-const HERO_IMG =
-  'https://images.unsplash.com/photo-1562774053-701939374585?w=2000&q=80'
+const HERO_IMG = '/images/seed/header.jpeg'
 const SLAB_IMG =
   'https://images.unsplash.com/photo-1568667256549-094345857637?w=1400&q=80'
 const DREAMS_IMG =
