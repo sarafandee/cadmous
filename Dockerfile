@@ -20,7 +20,7 @@ RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run buil
 
 # Bundle the admin-seed script into a single self-contained .mjs so the
 # runtime image doesn't need src/, tsx, or better-auth's node_modules.
-RUN node_modules/.bin/esbuild scripts/seed-admin.ts \
+RUN pnpm exec esbuild scripts/seed-admin.ts \
   --bundle --platform=node --target=node22 --format=esm \
   --tsconfig=tsconfig.json \
   --external:better-sqlite3 \
