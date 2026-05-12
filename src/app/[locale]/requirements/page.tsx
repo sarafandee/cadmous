@@ -363,7 +363,7 @@ export default async function RequirementsPage({ params }: Args) {
       <PageHeader
         locale={locale}
         title={t.title}
-        breadcrumb={[{ label: t.bcAdmissions }, { label: t.bcThis }]}
+        breadcrumb={[{ label: t.bcAdmissions, href: '/requirements' }, { label: t.bcThis }]}
         lede={t.lede}
       />
       <Section>

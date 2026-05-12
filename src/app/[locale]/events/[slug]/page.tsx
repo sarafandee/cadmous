@@ -39,7 +39,6 @@ export default async function EventDetailPage({ params }: Args) {
         locale={locale}
         title={event.title}
         breadcrumb={[
-          { label: bc.more },
           { label: bc.events, href: '/events' },
           { label: event.title },
         ]}

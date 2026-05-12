@@ -7,12 +7,19 @@ import {
   newsPosts,
   newsTranslations,
 } from '../src/db/schema/content'
+import { siteSettings } from '../src/db/schema/cms'
+
+// Bump SEED_VERSION when you change the seed data and want the seeder to
+// re-upsert into existing rows on the next deploy. The current value is
+// stored in site_settings under key `seed.news-events.version`.
+const SEED_VERSION = 2
+const SEED_KEY = 'seed.news-events.version'
 
 type Translations = { en: string; ar: string; fr: string }
 
 type NewsSeed = {
   slug: string
-  publishedAt: string // ISO
+  publishedAt: string
   imagePath: string
   title: Translations
   summary: Translations
@@ -21,97 +28,98 @@ type NewsSeed = {
 
 type EventSeed = {
   slug: string
-  startDate: string // ISO
+  startDate: string
   imagePath?: string
   title: Translations
   description: Translations
 }
 
-// Most posts on the original cadmous.edu.lb are Arabic-only school announcements.
-// We seed AR content into all three locale rows so the post is visible regardless
-// of UI language — Arabic speakers see Arabic, English/French speakers also see
-// Arabic (rather than a missing post). News #13 had an English translation on
-// the original site; we use it for the EN row.
-
-const AR_TITLE_13 = 'إنجاز تاريخي عظيم لطلابنا في برنامج البكالوريا الدولية'
-const EN_TITLE_13 = 'A Historic Achievement for Our IB Students'
-const AR_BODY_13 =
-  'بالنيابة عن مدير المدرسة الأب د. جان يونس، ومدير قسم البرامج الدولية الأستاذ أسامة سالم، يسرّنا أن نعلن بفخر أن جميع طلابنا الستة عشر في برنامج البكالوريا الدولية قد اجتازوا امتحاناتهم الرسمية بنجاح كامل للعام الدراسي 2024-2025. فرغم التحديات الهائلة التي فرضتها الظروف الصعبة، من تداعيات الحرب إلى انقطاع التعلّم الحضوري، أثبت طلابنا إصرارًا لا يتزعزع، ووقفوا إلى جانب معلميهم بإيمان وجهد مشترك. لقد جسّدوا معنى العزيمة، وأكدوا أن الصعوبات لا تُضعف الهمم بل تزيدها صلابة. هذا الإنجاز المشرّف هو ثمرة العمل الدؤوب والإصرار، ورسالة أمل إلى مجتمعنا بأسره: نحن قادرون على تخطّي كل العقبات عندما نتكاتف ونعمل بروح واحدة. مبارك لطلابنا الأبطال، طلاب البكالوريا الدولية! المستقبل ينتظركم، فامضوا إليه بثقة!'
-const EN_BODY_13 =
-  'On behalf of our esteemed school superior, Father Jean Younes, and the Director of the International Program Department, Mr. Ossama Salem, we are honored to announce that all 16 of our IB students have successfully conquered their official exams for 2024-2025. These young scholars have faced unimaginable challenges, enduring the trials of war and loss of classroom time. Yet, they stood firm, united with their dedicated teachers, to demonstrate unwavering resolve and extraordinary strength. They have shown that adversity only fuels their determination to succeed. This remarkable accomplishment is not just a reflection of their hard work but a powerful statement to our entire community: we can rise above any obstacle. Congratulations, IB students! The future is yours to conquer.'
-
-const AR_TITLE_14 = 'تهنئة من إدارة مدرسة قدموس'
-const AR_BODY_14 =
-  'إدارة مدرسة قدموس، بشخص رئيسها الأب جان يونس وأفراد الهيئتين التعليمية والإدارية، تفتخر بتلامذتها الأحبّة في صفوف علوم الحياة، العلوم العامة، والاقتصاد والاجتماع، في قسميهما الإنكليزي والفرنسي، وتبارك لهم نجاحهم وتميّزهم في الامتحانات الرسمية لهذا العام. وقد تقدّم إلى هذه الامتحانات 52 تلميذًا وتلميذة، فجاءت النتائج على النحو التالي: 50 تلميذًا نجحوا بنسبة 100% بين الناجحين، و2 تلميذين لم يوفَّقا في الدورة الأولى، على أمل أن يحققا النجاح في الدورة الثانية.'
-
-const AR_TITLE_12 = 'مواعيد بدء العام الدراسي 2025 - 2026'
-// news/12 has no extractable text body — content is on the poster image
-const AR_BODY_12 = ''
-
-const AR_TITLE_10 = 'التسجيل للعام الدراسي 2025 - 2026'
-const AR_BODY_10 =
-  'أهلنا الأعزاء، نذكّركم بضرورة التوجّه إلى مكتب المحاسبة لدفع ما تبقى من القسط لهذا العام، وتأمين مقاعد أولادكم للعام الدراسي القادم 2025-2026 من خلال دفع رسم التسجيل قبل 15 حزيران. يُعتبر التلميذ مسجّلًا فقط بعد دفع كامل القسط الحالي ورسم التسجيل. الرسم غير قابل للاسترجاع في حال الانسحاب. للاستعلام عن تفاصيل الأقساط، يمكنكم مراجعة مكتب المحاسبة مباشرة. شكرًا لتعاونكم وتفهّمكم الدائم.'
+// ──────────────── News (AR is source-of-truth; EN + FR translated) ────────────────
 
 const NEWS: NewsSeed[] = [
+  // News 14
   {
     slug: 'congratulations-from-cadmous-management',
     publishedAt: '2025-08-02T13:12:00Z',
     imagePath: '/images/seed/posts/news-14-1.jpg',
-    title: { ar: AR_TITLE_14, en: AR_TITLE_14, fr: AR_TITLE_14 },
-    summary: {
-      ar: 'تهنئة من إدارة مدرسة قدموس لتلامذتها بنتائج الامتحانات الرسمية للعام 2024-2025.',
-      en: 'تهنئة من إدارة مدرسة قدموس لتلامذتها بنتائج الامتحانات الرسمية للعام 2024-2025.',
-      fr: 'تهنئة من إدارة مدرسة قدموس لتلامذتها بنتائج الامتحانات الرسمية للعام 2024-2025.',
+    title: {
+      ar: 'تهنئة من إدارة مدرسة قدموس',
+      en: 'Congratulations from Cadmous College Management',
+      fr: 'Félicitations de la direction de Cadmous',
     },
-    body: { ar: AR_BODY_14, en: AR_BODY_14, fr: AR_BODY_14 },
+    summary: {
+      ar: 'تهنئة من إدارة المدرسة لتلامذتها بنتائج الامتحانات الرسمية للعام 2024-2025.',
+      en: 'A note from the school administration congratulating our students on their 2024-2025 official exam results.',
+      fr: "Un mot de la direction de l'école pour féliciter nos élèves de leurs résultats aux examens officiels 2024-2025.",
+    },
+    body: {
+      ar: 'إدارة مدرسة قدموس، بشخص رئيسها الأب جان يونس وأفراد الهيئتين التعليمية والإدارية، تفتخر بتلامذتها الأحبّة في صفوف علوم الحياة، العلوم العامة، والاقتصاد والاجتماع، في قسميهما الإنكليزي والفرنسي، وتبارك لهم نجاحهم وتميّزهم في الامتحانات الرسمية لهذا العام. وقد تقدّم إلى هذه الامتحانات 52 تلميذًا وتلميذة، فجاءت النتائج على النحو التالي: 50 تلميذًا نجحوا بنسبة 100% بين الناجحين، وتلميذان لم يوفَّقا في الدورة الأولى، على أمل أن يحقّقا النجاح في الدورة الثانية.',
+      en: 'The administration of Cadmous College, represented by its head Father Jean Younes together with the teaching and administrative bodies, takes great pride in our beloved students in the Life Sciences, General Sciences, and Economics & Sociology classes — across both the English and French sections — and congratulates them on their success and distinction in this year\'s official exams. 52 students sat for the exams, with the following results: 50 students passed (a 100% pass rate among successful candidates), and 2 students did not succeed in the first round, with hopes that they will pass in the second round.',
+      fr: "La direction de Cadmous College, représentée par son supérieur le Père Jean Younes et les membres des équipes pédagogique et administrative, est fière de ses chers élèves des classes de Sciences de la vie, Sciences générales, et Sociologie & Économie — dans les sections anglaise et française — et les félicite pour leur réussite et leur distinction aux examens officiels de cette année. 52 élèves se sont présentés aux examens, avec les résultats suivants : 50 élèves ont réussi (un taux de 100 % parmi les candidats reçus), et 2 élèves n'ont pas réussi à la première session, avec l'espoir qu'ils décrochent leur succès à la deuxième session.",
+    },
   },
+  // News 13 — EN translation is from the original site
   {
     slug: 'historic-ib-achievement',
     publishedAt: '2025-07-05T16:51:00Z',
     imagePath: '/images/seed/posts/news-13-1.jpg',
-    title: { ar: AR_TITLE_13, en: EN_TITLE_13, fr: AR_TITLE_13 },
+    title: {
+      ar: 'إنجاز تاريخي عظيم لطلابنا في برنامج البكالوريا الدولية',
+      en: 'A Historic Achievement for Our IB Students',
+      fr: 'Une réussite historique pour nos élèves IB',
+    },
     summary: {
       ar: 'جميع طلابنا الستة عشر في برنامج البكالوريا الدولية اجتازوا امتحاناتهم الرسمية بنجاح كامل للعام 2024-2025.',
-      en: 'All 16 of our IB Diploma students successfully passed their official exams for 2024-2025.',
-      fr: 'جميع طلابنا الستة عشر في برنامج البكالوريا الدولية اجتازوا امتحاناتهم الرسمية بنجاح كامل للعام 2024-2025.',
+      en: 'All 16 of our IB Diploma students successfully passed their 2024-2025 official exams.',
+      fr: 'Nos 16 élèves du programme IB ont tous réussi leurs examens officiels 2024-2025.',
     },
-    body: { ar: AR_BODY_13, en: EN_BODY_13, fr: AR_BODY_13 },
+    body: {
+      ar: 'بالنيابة عن مدير المدرسة الأب د. جان يونس، ومدير قسم البرامج الدولية الأستاذ أسامة سالم، يسرّنا أن نعلن بفخر أنّ جميع طلابنا الستة عشر في برنامج البكالوريا الدولية قد اجتازوا امتحاناتهم الرسمية بنجاح كامل للعام الدراسي 2024-2025. فرغم التحديات الهائلة التي فرضتها الظروف الصعبة، من تداعيات الحرب إلى انقطاع التعلّم الحضوري، أثبت طلابنا إصرارًا لا يتزعزع، ووقفوا إلى جانب معلميهم بإيمان وجهد مشترك. لقد جسّدوا معنى العزيمة، وأكدوا أنّ الصعوبات لا تُضعف الهمم بل تزيدها صلابة. هذا الإنجاز المشرّف هو ثمرة العمل الدؤوب والإصرار، ورسالة أمل إلى مجتمعنا بأسره: نحن قادرون على تخطّي كلّ العقبات عندما نتكاتف ونعمل بروح واحدة. مبارك لطلابنا الأبطال، طلاب البكالوريا الدولية! المستقبل ينتظركم، فامضوا إليه بثقة!',
+      en: 'On behalf of our esteemed school superior, Father Jean Younes, and the Director of the International Program Department, Mr. Ossama Salem, we are honored to announce that all 16 of our IB students have successfully conquered their official exams. These young scholars have faced unimaginable challenges, enduring the trials of war and loss of classroom time. Yet, they stood firm, united with their dedicated teachers, to demonstrate unwavering resolve and extraordinary strength. They have shown that adversity only fuels their determination to succeed. This remarkable accomplishment is not just a reflection of their hard work but a powerful statement to our entire community: we can rise above any obstacle. Their success is a beacon of hope and an inspiration to all. Congratulations, IB students! The future is yours to conquer.',
+      fr: "Au nom de notre supérieur estimé, le Père Jean Younes, et du directeur du département des programmes internationaux, M. Ossama Salem, nous avons l'honneur d'annoncer que la totalité de nos 16 élèves du programme IB ont brillamment réussi leurs examens officiels. Ces jeunes érudits ont affronté des défis inimaginables, surmontant les épreuves de la guerre et la perte de temps de classe. Et pourtant ils sont restés debout, unis à leurs enseignants dévoués, démontrant une détermination inébranlable et une force extraordinaire. Ils ont prouvé que l'adversité ne fait qu'attiser leur volonté de réussir. Cette réussite remarquable est non seulement le fruit de leur travail mais un message puissant à toute notre communauté : nous pouvons nous élever au-dessus de tout obstacle. Leur succès est un phare d'espoir et une inspiration. Félicitations à nos élèves IB ! L'avenir est à vous.",
+    },
   },
+  // News 12 — poster-only, no body text on the original
   {
     slug: 'school-year-start-dates-2025-2026',
     publishedAt: '2025-06-07T04:29:00Z',
     imagePath: '/images/seed/posts/news-12-1.jpg',
-    title: { ar: AR_TITLE_12, en: AR_TITLE_12, fr: AR_TITLE_12 },
+    title: {
+      ar: 'مواعيد بدء العام الدراسي 2025 - 2026',
+      en: 'Start Dates for the 2025-2026 School Year',
+      fr: 'Dates de rentrée pour l\'année scolaire 2025-2026',
+    },
     summary: {
       ar: 'مواعيد بدء العام الدراسي الجديد 2025 - 2026.',
-      en: 'مواعيد بدء العام الدراسي الجديد 2025 - 2026.',
-      fr: 'مواعيد بدء العام الدراسي الجديد 2025 - 2026.',
+      en: 'Start dates for the upcoming 2025-2026 academic year.',
+      fr: 'Dates de rentrée pour la prochaine année scolaire 2025-2026.',
     },
-    body: { ar: AR_BODY_12, en: AR_BODY_12, fr: AR_BODY_12 },
+    body: { ar: '', en: '', fr: '' },
   },
+  // News 10
   {
     slug: 'registration-2025-2026',
     publishedAt: '2025-06-07T03:47:00Z',
     imagePath: '/images/seed/posts/news-10-1.jpg',
-    title: { ar: AR_TITLE_10, en: AR_TITLE_10, fr: AR_TITLE_10 },
+    title: {
+      ar: 'التسجيل للعام الدراسي 2025 - 2026',
+      en: 'Registration 2025-2026',
+      fr: 'Inscription 2025-2026',
+    },
     summary: {
       ar: 'تذكير الأهالي بإكمال دفع القسط الحالي ورسم التسجيل قبل 15 حزيران.',
-      en: 'تذكير الأهالي بإكمال دفع القسط الحالي ورسم التسجيل قبل 15 حزيران.',
-      fr: 'تذكير الأهالي بإكمال دفع القسط الحالي ورسم التسجيل قبل 15 حزيران.',
+      en: "A reminder to families to complete this year's tuition payment and the registration fee before June 15.",
+      fr: "Rappel aux familles de régler le solde des frais de l'année et les frais d'inscription avant le 15 juin.",
     },
-    body: { ar: AR_BODY_10, en: AR_BODY_10, fr: AR_BODY_10 },
+    body: {
+      ar: 'أهلنا الأعزاء، نذكّركم بضرورة التوجّه إلى مكتب المحاسبة لدفع ما تبقى من القسط لهذا العام، وتأمين مقاعد أولادكم للعام الدراسي القادم 2025-2026 من خلال دفع رسم التسجيل قبل 15 حزيران. يُعتبر التلميذ مسجَّلًا فقط بعد دفع كامل القسط الحالي ورسم التسجيل. الرسم غير قابل للاسترجاع في حال الانسحاب. لا إمكانية لفتح صفوف جديدة بسبب عدم وجود غرف. بلغ عدد المسجّلين حتى اليوم 776 من طلابنا الحاليين و150 طالبًا جديدًا. التسجيل المبكر يساعد المدرسة في التحضيرات (تأمين الكتب، الزيّ المدرسي والقرطاسية، وتوقيع العقود مع الأساتذة…). للاستعلام عن تفاصيل الأقساط، يمكنكم مراجعة مكتب المحاسبة مباشرة. شكرًا لتعاونكم وتفهّمكم الدائم.',
+      en: "Dear families, we remind you to visit the accounting office to settle the remainder of this year's tuition and secure your children's seats for the upcoming 2025-2026 school year by paying the registration fee before June 15. A student is only considered registered after full payment of this year's tuition and the registration fee. The registration fee is non-refundable in case of withdrawal. We are unable to open new classes due to a lack of available rooms. Registrations so far: 776 returning students and 150 new students. Early registration helps the school prepare (textbooks, uniforms, stationery, and teacher contracts). For tuition details, please contact the accounting office directly. Thank you for your continued cooperation and understanding.",
+      fr: "Chères familles, nous vous rappelons de vous rendre au bureau de la comptabilité pour régler le solde des frais de cette année et de réserver la place de vos enfants pour l'année scolaire 2025-2026 à venir en réglant les frais d'inscription avant le 15 juin. Un élève n'est considéré comme inscrit qu'après le paiement intégral des frais de l'année en cours et des frais d'inscription. Les frais d'inscription ne sont pas remboursables en cas de désistement. Nous ne pouvons pas ouvrir de nouvelles classes par manque de salles disponibles. Inscriptions à ce jour : 776 élèves de retour et 150 nouveaux élèves. Une inscription rapide aide l'école dans ses préparatifs (manuels, uniformes, papeterie, et contrats avec les enseignants). Pour le détail des frais, merci de contacter directement le bureau de la comptabilité. Merci de votre coopération et de votre compréhension.",
+    },
   },
 ]
 
-// Events — most are video or photo galleries with little body text. Where there's
-// a YouTube link, we include it in the description (Markdown link, rendered as text
-// for now). Posters are seeded as the event image.
-
-const AR_EVENT_61_DESC = 'حفل تخرّج صفّ 2025 — شاهد الفيديو على يوتيوب: https://youtu.be/qBbQVoi9IJU'
-const EN_EVENT_61_DESC = 'Graduation Class of 2025 — watch on YouTube: https://youtu.be/qBbQVoi9IJU'
-
-const AR_EVENT_57_DESC = 'إعلان مدرسة قدموس — شاهد الفيديو على يوتيوب: https://youtu.be/a1zj1EHWqhQ'
-const EN_EVENT_57_DESC = 'Cadmous College advertisement — watch on YouTube: https://youtu.be/a1zj1EHWqhQ'
+// ──────────────── Events ────────────────
 
 const EVENTS: EventSeed[] = [
   {
@@ -120,13 +128,13 @@ const EVENTS: EventSeed[] = [
     imagePath: '/images/seed/posts/events-62-1.jpg',
     title: {
       ar: 'إنجاز تاريخي عظيم لطلابنا في برنامج البكالوريا الدولية',
-      en: 'إنجاز تاريخي عظيم لطلابنا في برنامج البكالوريا الدولية',
-      fr: 'إنجاز تاريخي عظيم لطلابنا في برنامج البكالوريا الدولية',
+      en: 'A Historic IB Achievement for Our Students',
+      fr: 'Une réussite IB historique pour nos élèves',
     },
     description: {
       ar: 'احتفال بنجاح طلاب البكالوريا الدولية في امتحاناتهم الرسمية للعام 2024-2025.',
       en: 'A celebration of our IB students passing their 2024-2025 official exams.',
-      fr: 'احتفال بنجاح طلاب البكالوريا الدولية في امتحاناتهم الرسمية للعام 2024-2025.',
+      fr: 'Une célébration de la réussite de nos élèves IB aux examens officiels 2024-2025.',
     },
   },
   {
@@ -134,20 +142,28 @@ const EVENTS: EventSeed[] = [
     startDate: '2025-06-14T03:16:00Z',
     title: {
       ar: 'حفل تخرّج صفّ 2025',
-      en: 'Graduation Class of 2025',
-      fr: 'حفل تخرّج صفّ 2025',
+      en: 'Graduation — Class of 2025',
+      fr: 'Cérémonie de remise des diplômes — Promotion 2025',
     },
-    description: { ar: AR_EVENT_61_DESC, en: EN_EVENT_61_DESC, fr: AR_EVENT_61_DESC },
+    description: {
+      ar: 'حفل تخرّج صفّ 2025. شاهد الفيديو على يوتيوب: https://youtu.be/qBbQVoi9IJU',
+      en: 'Graduation ceremony for the Class of 2025. Watch on YouTube: https://youtu.be/qBbQVoi9IJU',
+      fr: 'Cérémonie de remise des diplômes de la promotion 2025. À regarder sur YouTube : https://youtu.be/qBbQVoi9IJU',
+    },
   },
   {
     slug: 'a-celebration-unlike-any-other',
     startDate: '2025-06-07T04:54:00Z',
     imagePath: '/images/seed/posts/events-60-1.jpg',
-    title: { ar: 'احتفال لا يشبه غيره', en: 'احتفال لا يشبه غيره', fr: 'احتفال لا يشبه غيره' },
+    title: {
+      ar: 'احتفال لا يشبه غيره',
+      en: 'A Celebration Like No Other',
+      fr: 'Une célébration unique',
+    },
     description: {
       ar: 'احتفال خاصّ من مدرسة قدموس لتلامذتها وعائلاتها.',
-      en: 'احتفال خاصّ من مدرسة قدموس لتلامذتها وعائلاتها.',
-      fr: 'احتفال خاصّ من مدرسة قدموس لتلامذتها وعائلاتها.',
+      en: 'A special celebration from Cadmous College for our students and families.',
+      fr: "Une célébration spéciale de Cadmous College pour nos élèves et leurs familles.",
     },
   },
   {
@@ -156,13 +172,13 @@ const EVENTS: EventSeed[] = [
     imagePath: '/images/seed/posts/events-59-1.jpg',
     title: {
       ar: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي (فرنسي وإنكليزي)',
-      en: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي (فرنسي وإنكليزي)',
-      fr: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي (فرنسي وإنكليزي)',
+      en: 'End-of-Year Ceremony 2024-2025 — Year 1 (French & English sections)',
+      fr: "Cérémonie de fin d'année 2024-2025 — Année 1 (sections française et anglaise)",
     },
     description: {
       ar: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي الفرنسي والإنكليزي.',
-      en: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي الفرنسي والإنكليزي.',
-      fr: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الأوّل الأساسي الفرنسي والإنكليزي.',
+      en: 'End-of-year ceremony 2024-2025 for our Year 1 students across the French and English sections.',
+      fr: "Cérémonie de fin d'année 2024-2025 pour nos élèves de l'Année 1 dans les sections française et anglaise.",
     },
   },
   {
@@ -171,13 +187,13 @@ const EVENTS: EventSeed[] = [
     imagePath: '/images/seed/posts/events-58-1.jpg',
     title: {
       ar: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الروضات',
-      en: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الروضات',
-      fr: 'حفل اختتام نهاية العام الدراسي 2024-2025 لتلامذة صفوف الروضات',
+      en: 'End-of-Year Ceremony 2024-2025 — Kindergarten',
+      fr: "Cérémonie de fin d'année 2024-2025 — Maternelle",
     },
     description: {
       ar: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الروضات.',
-      en: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الروضات.',
-      fr: 'حفل اختتام العام الدراسي 2024-2025 لتلامذة صفوف الروضات.',
+      en: 'End-of-year ceremony 2024-2025 for our Kindergarten students.',
+      fr: "Cérémonie de fin d'année 2024-2025 pour nos élèves de maternelle.",
     },
   },
   {
@@ -186,11 +202,34 @@ const EVENTS: EventSeed[] = [
     title: {
       ar: 'إعلان مدرسة قدموس',
       en: 'Cadmous College Advertisement',
-      fr: 'إعلان مدرسة قدموس',
+      fr: 'Publicité Cadmous College',
     },
-    description: { ar: AR_EVENT_57_DESC, en: EN_EVENT_57_DESC, fr: AR_EVENT_57_DESC },
+    description: {
+      ar: 'إعلان مدرسة قدموس. شاهد الفيديو على يوتيوب: https://youtu.be/a1zj1EHWqhQ',
+      en: 'Cadmous College advertisement. Watch on YouTube: https://youtu.be/a1zj1EHWqhQ',
+      fr: 'Publicité Cadmous College. À regarder sur YouTube : https://youtu.be/a1zj1EHWqhQ',
+    },
   },
 ]
+
+async function getStoredVersion(): Promise<number> {
+  const row = await db.query.siteSettings.findFirst({
+    where: (s, { and, eq: eq2 }) => and(eq2(s.key, SEED_KEY), eq2(s.locale, '')),
+  })
+  if (!row) return 0
+  const v = parseInt(row.value, 10)
+  return Number.isFinite(v) ? v : 0
+}
+
+async function setStoredVersion(v: number) {
+  await db
+    .insert(siteSettings)
+    .values({ key: SEED_KEY, locale: '', value: String(v) })
+    .onConflictDoUpdate({
+      target: [siteSettings.key, siteSettings.locale],
+      set: { value: String(v) },
+    })
+}
 
 async function seedNews() {
   for (const n of NEWS) {
@@ -289,17 +328,18 @@ async function seedEvents() {
 }
 
 async function main() {
-  const ifEmpty = process.argv.includes('--if-empty')
-  if (ifEmpty) {
-    const newsCount = await db.query.newsPosts.findFirst({})
-    const eventCount = await db.query.events.findFirst({})
-    if (newsCount || eventCount) {
-      console.log('[seed-news-events] news_posts or events already populated; skipping.')
+  const args = new Set(process.argv.slice(2))
+  const stored = await getStoredVersion()
+  if (args.has('--if-stale')) {
+    if (stored >= SEED_VERSION) {
+      console.log(`[seed-news-events] stored=${stored} >= SEED_VERSION=${SEED_VERSION}; skipping.`)
       return
     }
+    console.log(`[seed-news-events] stored=${stored} < SEED_VERSION=${SEED_VERSION}; seeding.`)
   }
   await seedNews()
   await seedEvents()
+  await setStoredVersion(SEED_VERSION)
 }
 
 main()

@@ -251,7 +251,7 @@ export default async function Page({ params }: Args) {
       <PageHeader
         locale={locale}
         title={t.title}
-        breadcrumb={[{ label: t.bcDivisions }, { label: t.title }]}
+        breadcrumb={[{ label: t.bcDivisions, href: '/kindergarten' }, { label: t.title }]}
         lede={t.pageLede}
       />
 
@@ -292,31 +292,45 @@ export default async function Page({ params }: Args) {
           title="Recognised internationally."
         />
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card>
-            <div className="mb-3 flex h-32 items-center justify-center">
-              <img
-                src="/images/seed/authorization_small.png"
-                alt={t.credentials.authorization}
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="text-[15px] font-semibold text-white">
-              {t.credentials.authorization}
-            </h3>
-          </Card>
-          <Card>
-            <div className="mb-3 flex h-32 items-center justify-center">
-              <img
-                src="/images/seed/equivalency_small.png"
-                alt={t.credentials.equivalency}
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <h3 className="text-[15px] font-semibold text-white">
-              {t.credentials.equivalency}
-            </h3>
-          </Card>
-          <Card>
+          <a
+            href="/images/seed/authorization.pdf"
+            target="_blank"
+            rel="noopener"
+            className="block"
+          >
+            <Card className="h-full transition hover:border-white/20">
+              <div className="mb-3 flex h-32 items-center justify-center">
+                <img
+                  src="/images/seed/authorization_small.png"
+                  alt={t.credentials.authorization}
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+              <h3 className="text-[15px] font-semibold text-white">
+                {t.credentials.authorization}
+              </h3>
+            </Card>
+          </a>
+          <a
+            href="/images/seed/equivalency.png"
+            target="_blank"
+            rel="noopener"
+            className="block"
+          >
+            <Card className="h-full transition hover:border-white/20">
+              <div className="mb-3 flex h-32 items-center justify-center">
+                <img
+                  src="/images/seed/equivalency_small.png"
+                  alt={t.credentials.equivalency}
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+              <h3 className="text-[15px] font-semibold text-white">
+                {t.credentials.equivalency}
+              </h3>
+            </Card>
+          </a>
+          <Card className="h-full">
             <div className="mb-3 flex h-32 items-center justify-center">
               <img
                 src="/images/seed/dp-programme-logo-en-small.png"

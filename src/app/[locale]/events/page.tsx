@@ -38,7 +38,7 @@ export default async function EventsPage({ params }: Args) {
       <PageHeader
         locale={locale}
         title={t.title}
-        breadcrumb={[{ label: t.bcMore }, { label: t.bcThis }]}
+        breadcrumb={[{ label: t.bcThis }]}
         lede={t.lede}
       />
       <Section>

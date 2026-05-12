@@ -55,7 +55,7 @@ export default async function Page({ params }: Args) {
       <PageHeader
         locale={locale}
         title={t.title}
-        breadcrumb={[{ label: t.breadcrumb }, { label: t.title }]}
+        breadcrumb={[{ label: t.breadcrumb, href: '/director' }, { label: t.title }]}
         lede={t.lede}
       />
       <Section>
