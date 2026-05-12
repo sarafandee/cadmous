@@ -22,12 +22,8 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    label: 'CMS',
-    items: [
-      { href: '/admin/divisions', label: 'Divisions' },
-      { href: '/admin/pages', label: 'Pages' },
-      { href: '/admin/settings', label: 'Settings' },
-    ],
+    label: 'Site',
+    items: [{ href: '/admin/settings', label: 'Settings' }],
   },
   {
     label: 'Inbox',

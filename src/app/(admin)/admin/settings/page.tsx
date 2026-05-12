@@ -18,7 +18,7 @@ export default async function SettingsPage() {
   return (
     <main>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
-        CMS
+        Site
       </p>
       <h1 className="mt-2 text-3xl font-bold tracking-tight">Site settings</h1>
       <p className="mt-1 max-w-prose text-sm text-zinc-500">
