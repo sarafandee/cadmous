@@ -8,6 +8,13 @@
       "when": 1778558643988,
       "tag": "0000_steady_otto_octavius",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1778559110951,
+      "tag": "0001_furry_malice",
+      "breakpoints": true
     }
   ]
 }

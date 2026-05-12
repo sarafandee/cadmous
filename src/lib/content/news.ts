@@ -1,30 +1,78 @@
-/**
- * News content access. Public API is async on purpose so the static-data impl
- * below can later be swapped for a DB/CMS read without touching callers.
- *
- * Today: reads from src/lib/content/_static/news.data.ts.
- * Future: replace these function bodies (or this file) with admin-backed reads.
- * Keep the function signatures and return shapes stable.
- */
+import { eq, desc } from 'drizzle-orm'
+import { unstable_cache } from 'next/cache'
 
-import { defaultLocale, locales, type Locale } from '@/i18n/routing'
+import { db } from '@/db/client'
+import { media, newsPosts, newsTranslations } from '@/db/schema/content'
+
+import { asLocale, pickTranslation } from './_internal/locale'
 import type { NewsPost } from './types'
-import { NEWS_BY_LOCALE } from './_static/news.data'
 
 export type { NewsPost }
 
-function asLocale(locale: string): Locale {
-  return (locales as readonly string[]).includes(locale) ? (locale as Locale) : defaultLocale
+const TAGS = {
+  all: 'news',
+  one: (slug: string) => `news:${slug}`,
+} as const
+
+type Row = {
+  id: string
+  slug: string
+  publishedAtIso: string
+  imagePath: string | null
+  translations: { locale: string; title: string; summary: string; body: string }[]
+}
+
+const fetchPublished = unstable_cache(
+  async (): Promise<Row[]> => {
+    const rows = await db.query.newsPosts.findMany({
+      where: eq(newsPosts.status, 'published'),
+      orderBy: [desc(newsPosts.publishedAt)],
+      with: {
+        translations: {
+          columns: { locale: true, title: true, summary: true, body: true },
+        },
+        image: { columns: { path: true } },
+      },
+    })
+    return rows.map((r) => ({
+      id: r.id,
+      slug: r.slug,
+      publishedAtIso: r.publishedAt.toISOString(),
+      imagePath: r.image?.path ?? null,
+      translations: r.translations,
+    }))
+  },
+  ['news', 'published', 'list'],
+  { tags: [TAGS.all] },
+)
+
+function project(row: Row, locale: string): NewsPost | undefined {
+  const t = pickTranslation(row.translations, asLocale(locale))
+  if (!t) return undefined
+  return {
+    slug: row.slug,
+    title: t.title,
+    publishedAt: row.publishedAtIso,
+    summary: t.summary,
+    body: t.body || undefined,
+    image: row.imagePath ?? undefined,
+  }
 }
 
 export async function getAllNews(locale: string): Promise<NewsPost[]> {
-  return NEWS_BY_LOCALE[asLocale(locale)]
+  const rows = await fetchPublished()
+  return rows
+    .map((r) => project(r, locale))
+    .filter((p): p is NewsPost => p !== undefined)
 }
 
 export async function getNewsBySlug(
   locale: string,
   slug: string,
 ): Promise<NewsPost | undefined> {
-  const posts = await getAllNews(locale)
-  return posts.find((p) => p.slug === slug)
+  const rows = await fetchPublished()
+  const row = rows.find((r) => r.slug === slug)
+  return row ? project(row, locale) : undefined
 }
+
+export const NEWS_CACHE_TAGS = TAGS
