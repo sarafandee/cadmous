@@ -15,6 +15,13 @@
       "when": 1778559110951,
       "tag": "0001_furry_malice",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1778560265532,
+      "tag": "0002_brief_tag",
+      "breakpoints": true
     }
   ]
 }

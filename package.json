@@ -16,6 +16,7 @@
     "db:studio": "drizzle-kit studio",
     "seed:admin": "tsx --env-file-if-exists=.env scripts/seed-admin.ts",
     "seed:content": "tsx --env-file-if-exists=.env scripts/seed-content.ts",
+    "seed:submissions": "tsx --env-file-if-exists=.env scripts/seed-submissions.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
