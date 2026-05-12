@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { setRequestLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { PageHeader, Section } from '@/components/CadmousUI'
 import { getAllEvents } from '@/lib/content/events'
 
@@ -48,7 +48,7 @@ export default async function EventsPage({ params }: Args) {
             return (
               <Link
                 key={e.slug}
-                href={`/${locale}/events/${e.slug}`}
+                href={`/events/${e.slug}`}
                 className="group flex flex-col overflow-hidden rounded-[6px] border border-white/10 bg-navy-800 transition hover:-translate-y-0.5 hover:border-white/20"
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-navy-700">

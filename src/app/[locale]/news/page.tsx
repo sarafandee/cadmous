@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { setRequestLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { PageHeader, Section, SectionHead } from '@/components/CadmousUI'
 import { getAllNews } from '@/lib/content/news'
 
@@ -66,7 +66,7 @@ export default async function NewsPage({ params }: Args) {
       {featured && (
         <Section>
           <Link
-            href={`/${locale}/news/${featured.slug}`}
+            href={`/news/${featured.slug}`}
             className="grid items-stretch overflow-hidden rounded-[6px] border border-white/10 bg-navy-800 transition hover:border-white/20 lg:grid-cols-[1.4fr_1fr]"
           >
             <div className="aspect-[16/10] overflow-hidden bg-navy-700">
@@ -95,7 +95,7 @@ export default async function NewsPage({ params }: Args) {
           {rest.map((p) => (
             <Link
               key={p.slug}
-              href={`/${locale}/news/${p.slug}`}
+              href={`/news/${p.slug}`}
               className="grid grid-cols-[1fr_auto] items-center gap-4 bg-navy-900 px-6 py-6 transition hover:bg-navy-800"
             >
               <div>

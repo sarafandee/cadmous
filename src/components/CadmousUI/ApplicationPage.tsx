@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { ApplicationForm } from '@/components/CadmousUI/ApplicationForm'
 import { Card, Eyebrow, PageHeader, Section } from '@/components/CadmousUI'
+import { Link } from '@/i18n/navigation'
 
 type Lang = 'en' | 'fr' | 'ar'
 
@@ -44,7 +44,7 @@ export function ApplicationPageShell({
             <Eyebrow>{labels.helpEyebrow}</Eyebrow>
             <p className="mb-3 text-sm text-white/70">{labels.helpBody}</p>
             <Link
-              href={`/${locale}/contact`}
+              href="/contact"
               className="inline-flex items-center gap-2 rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5"
             >
               {labels.helpCta}
@@ -55,7 +55,7 @@ export function ApplicationPageShell({
               {(['en', 'fr', 'ar'] as Lang[]).map((l) => (
                 <Link
                   key={l}
-                  href={`/${locale}/application/${l}`}
+                  href={`/application/${l}`}
                   className={`rounded-[4px] border px-3 py-1.5 text-xs font-semibold transition ${
                     l === lang
                       ? 'border-crimson-400 bg-crimson-500/15 text-crimson-400'

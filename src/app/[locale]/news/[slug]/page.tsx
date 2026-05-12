@@ -35,7 +35,7 @@ export default async function NewsDetailPage({ params }: Args) {
         title={post.title}
         breadcrumb={[
           { label: bc.more },
-          { label: bc.news, href: `/${locale}/news` },
+          { label: bc.news, href: '/news' },
           { label: post.title },
         ]}
         lede={post.summary}

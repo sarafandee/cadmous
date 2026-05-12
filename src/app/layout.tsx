@@ -5,23 +5,17 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
-import { Footer } from '@/components/layout/Footer/Component'
-import { Header } from '@/components/layout/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
-import { getLocale } from 'next-intl/server'
 
 import './globals.css'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale()
-  const dir = locale === 'ar' ? 'rtl' : 'ltr'
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       className={cn(GeistSans.variable, GeistMono.variable)}
-      lang={locale}
-      dir={dir}
+      lang="en"
+      dir="ltr"
       suppressHydrationWarning
     >
       <head>
@@ -36,11 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
-        <Providers>
-          <Header />
-          {children}
-          <Footer />
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

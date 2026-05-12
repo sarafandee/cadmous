@@ -46,8 +46,8 @@ export function DivisionPage(props: DivisionPageProps) {
       <CTABanner
         title={labels.ctaTitle}
         body={labels.ctaBody}
-        primary={{ href: `/${locale}/requirements`, label: labels.ctaPrimary }}
-        secondary={{ href: `/${locale}/contact`, label: labels.ctaSecondary }}
+        primary={{ href: '/requirements', label: labels.ctaPrimary }}
+        secondary={{ href: '/contact', label: labels.ctaSecondary }}
       />
     </>
   )
