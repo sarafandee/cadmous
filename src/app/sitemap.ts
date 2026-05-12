@@ -7,6 +7,20 @@ import { locales } from '@/i18n/routing'
 
 export const revalidate = 3600
 
+// Build runs in a container with no migrated DB. Fall back to empty
+// arrays so the sitemap can render its static portion at build time;
+// runtime always has the migrated DB so this only affects build.
+async function safeFetch<T>(p: Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await p
+  } catch (err) {
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('[sitemap] DB query failed, returning empty:', (err as Error).message)
+    }
+    return fallback
+  }
+}
+
 const STATIC_PATHS = [
   '/',
   '/vision-mission',
@@ -43,14 +57,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   const [newsRows, eventRows] = await Promise.all([
-    db
-      .select({ slug: newsPosts.slug, updatedAt: newsPosts.updatedAt })
-      .from(newsPosts)
-      .where(eq(newsPosts.status, 'published')),
-    db
-      .select({ slug: events.slug, updatedAt: events.updatedAt })
-      .from(events)
-      .where(eq(events.status, 'published')),
+    safeFetch(
+      db
+        .select({ slug: newsPosts.slug, updatedAt: newsPosts.updatedAt })
+        .from(newsPosts)
+        .where(eq(newsPosts.status, 'published')),
+      [] as { slug: string; updatedAt: Date }[],
+    ),
+    safeFetch(
+      db
+        .select({ slug: events.slug, updatedAt: events.updatedAt })
+        .from(events)
+        .where(eq(events.status, 'published')),
+      [] as { slug: string; updatedAt: Date }[],
+    ),
   ])
 
   const staticEntries = STATIC_PATHS.flatMap((p) =>
