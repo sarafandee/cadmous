@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import type { ReactNode } from 'react'
+
+import { Link } from '@/i18n/navigation'
 
 export function PageHeader({
   title,
@@ -25,7 +26,7 @@ export function PageHeader({
       <div className="relative mx-auto max-w-[1240px]">
         {breadcrumb && breadcrumb.length > 0 && (
           <div className="mb-5 flex flex-wrap items-center gap-2 text-xs tracking-[0.06em] text-white/40">
-            <Link href={`/${locale}`} className="hover:text-white">
+            <Link href="/" className="hover:text-white">
               {homeLabel}
             </Link>
             {breadcrumb.map((b, i) => (

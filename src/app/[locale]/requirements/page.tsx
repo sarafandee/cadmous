@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { setRequestLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import {
   Card,
   FAQ,
@@ -226,7 +226,7 @@ export default async function RequirementsPage({ params }: Args) {
           {[t.appEn, t.appFr, t.appAr].map((a, i) => (
             <Link
               key={i}
-              href={`/${locale}/${a.href}`}
+              href={`/${a.href}`}
               className="group"
             >
               <Card className="h-full">

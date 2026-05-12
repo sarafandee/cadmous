@@ -1,6 +1,6 @@
 import { setRequestLocale } from 'next-intl/server'
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Link } from '@/i18n/navigation'
 import { getAllNews } from '@/lib/content/news'
 import { getAllEvents } from '@/lib/content/events'
 
@@ -509,10 +509,8 @@ export default async function HomePage({ params }: Args) {
   const stackPosts = posts.slice(1, 4)
   const stackFallback = NEWS_STACK[locale] || NEWS_STACK.en
   const announcements = ANNOUNCEMENTS[locale] || ANNOUNCEMENTS.en
-  const prefixHref = (items: { l: string; h: string }[]) =>
-    items.map((it) => ({ l: it.l, h: `/${locale}${it.h}` }))
-  const lebanese = prefixHref(LEBANESE_DIVISIONS[locale] || LEBANESE_DIVISIONS.en)
-  const intl = prefixHref(INTL_DIVISIONS[locale] || INTL_DIVISIONS.en)
+  const lebanese = LEBANESE_DIVISIONS[locale] || LEBANESE_DIVISIONS.en
+  const intl = INTL_DIVISIONS[locale] || INTL_DIVISIONS.en
   const whyItems = WHY_ITEMS[locale] || WHY_ITEMS.en
   const scholarships = SCHOLARSHIPS[locale] || SCHOLARSHIPS.en
   const voices = VOICES[locale] || VOICES.en
@@ -545,7 +543,7 @@ export default async function HomePage({ params }: Args) {
           </p>
           <div className="flex flex-wrap items-center gap-[18px]">
             <Link
-              href={`/${locale}/contact`}
+              href={'/contact'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-crimson-500 bg-crimson-500 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
             >
               {l.ctaVisit}
@@ -609,11 +607,11 @@ export default async function HomePage({ params }: Args) {
           <SectionHead
             eyebrow={l.campusNewsEyebrow}
             title={l.campusNewsTitle}
-            link={{ href: `/${locale}/news`, label: l.allNews }}
+            link={{ href: '/news', label: l.allNews }}
           />
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
             <Link
-              href={featuredPost ? `/${locale}/news/${featuredPost.slug}` : `/${locale}/news`}
+              href={featuredPost ? `/news/${featuredPost.slug}` : '/news'}
               className="group flex flex-col overflow-hidden rounded-[6px] border border-white/10 bg-navy-800 transition hover:-translate-y-0.5 hover:border-white/20"
             >
               <div className="aspect-[16/10] overflow-hidden bg-navy-700">
@@ -643,7 +641,7 @@ export default async function HomePage({ params }: Args) {
             <div className="flex flex-col gap-px overflow-hidden rounded-[6px] border border-white/10 bg-white/10">
               {(stackPosts.length > 0
                 ? stackPosts.map((p) => ({
-                    href: `/${locale}/news/${p.slug}`,
+                    href: `/news/${p.slug}`,
                     date: p.publishedAt
                       ? dateFmt(p.publishedAt)
                       : NEWS_FALLBACK_DATE[locale] || NEWS_FALLBACK_DATE.en,
@@ -651,7 +649,7 @@ export default async function HomePage({ params }: Args) {
                     body: p.summary,
                   }))
                 : stackFallback.map((s) => ({
-                    href: `/${locale}/news`,
+                    href: '/news',
                     date: s.date,
                     title: s.title,
                     body: s.body,
@@ -682,7 +680,7 @@ export default async function HomePage({ params }: Args) {
           <SectionHead
             eyebrow={l.academicsEyebrow}
             title={l.academicsTitle}
-            link={{ href: `/${locale}/kindergarten`, label: l.allDivisions }}
+            link={{ href: '/kindergarten', label: l.allDivisions }}
           />
           <div className="grid gap-6 lg:grid-cols-2">
             <AcademicsCol
@@ -702,7 +700,7 @@ export default async function HomePage({ params }: Args) {
               }
               items={lebanese}
               ctaLabel={l.seeAllDivisions}
-              ctaHref={`/${locale}/kindergarten`}
+              ctaHref={'/kindergarten'}
             />
             <AcademicsCol
               title={l.intlProgramme}
@@ -721,7 +719,7 @@ export default async function HomePage({ params }: Args) {
               }
               items={intl}
               ctaLabel={l.aboutIB}
-              ctaHref={`/${locale}/international-programs`}
+              ctaHref={'/international-programs'}
             />
           </div>
         </div>
@@ -772,7 +770,7 @@ export default async function HomePage({ params }: Args) {
             {whyItems.map((it, i, arr) => (
               <Link
                 key={it.n}
-                href={`/${locale}/vision-mission`}
+                href={'/vision-mission'}
                 className={`group grid items-center gap-4 py-7 lg:grid-cols-[80px_1fr_1fr_auto] lg:gap-8 ${
                   i < arr.length - 1 ? 'border-b border-white/10' : ''
                 }`}
@@ -801,7 +799,7 @@ export default async function HomePage({ params }: Args) {
           <SectionHead
             eyebrow={l.eventsEyebrow}
             title={l.eventsTitle}
-            link={{ href: `/${locale}/events`, label: l.fullCalendar }}
+            link={{ href: '/events', label: l.fullCalendar }}
           />
           <div className="grid gap-[18px] sm:grid-cols-2 xl:grid-cols-4">
             {events.map((e, i) => {
@@ -809,7 +807,7 @@ export default async function HomePage({ params }: Args) {
               return (
                 <Link
                   key={e.slug}
-                  href={`/${locale}/events/${e.slug}`}
+                  href={`/events/${e.slug}`}
                   className="group flex flex-col overflow-hidden rounded-[6px] border border-white/10 bg-navy-800 transition hover:-translate-y-0.5 hover:border-white/20"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-navy-700">
@@ -903,7 +901,7 @@ export default async function HomePage({ params }: Args) {
             {scholarships.map((s, i) => (
               <Link
                 key={i}
-                href={`/${locale}/requirements`}
+                href={'/requirements'}
                 className="group overflow-hidden rounded-[6px] border border-white/10 bg-navy-900 transition hover:-translate-y-0.5 hover:border-white/20"
               >
                 <div className="aspect-[16/10] overflow-hidden bg-navy-700">
@@ -981,13 +979,13 @@ export default async function HomePage({ params }: Args) {
           <p className="mb-8 max-w-[56ch] text-[17px] text-white">{l.dreamsBody}</p>
           <div className="flex flex-wrap gap-3.5">
             <Link
-              href={`/${locale}/contact`}
+              href={'/contact'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-crimson-500 bg-crimson-500 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
             >
               {l.ctaVisit}
             </Link>
             <Link
-              href={`/${locale}/requirements`}
+              href={'/requirements'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5"
             >
               {l.dreamsApply}
@@ -1008,7 +1006,7 @@ export default async function HomePage({ params }: Args) {
             </h2>
             <p className="mb-6 text-white/70">{l.faqBody}</p>
             <Link
-              href={`/${locale}/contact`}
+              href={'/contact'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5"
             >
               {l.faqContact}
