@@ -125,6 +125,42 @@ const ANNOUNCEMENTS: AnnouncementSeed[] = [
       fr: { title: '', body: '' },
     },
   },
+  {
+    severity: 'info',
+    status: 'published',
+    translations: {
+      en: {
+        title: 'New STEAM laboratory',
+        body: 'Our new STEAM lab opens this term — robotics, design, and biology projects on display.',
+      },
+      ar: { title: '', body: '' },
+      fr: { title: '', body: '' },
+    },
+  },
+  {
+    severity: 'info',
+    status: 'published',
+    translations: {
+      en: {
+        title: 'Open Day · 14 November',
+        body: 'Tour the campus, meet our teachers, and see lessons in action across every division.',
+      },
+      ar: { title: '', body: '' },
+      fr: { title: '', body: '' },
+    },
+  },
+  {
+    severity: 'info',
+    status: 'published',
+    translations: {
+      en: {
+        title: 'IB Authorisation',
+        body: 'Cadmous is now an authorised IB World School delivering the Diploma Programme in Grades 11–12.',
+      },
+      ar: { title: '', body: '' },
+      fr: { title: '', body: '' },
+    },
+  },
 ]
 
 async function clear() {

@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
+import { getActiveAnnouncements } from '@/lib/content/announcements'
 import { getAllNews } from '@/lib/content/news'
 import { getAllEvents } from '@/lib/content/events'
 
@@ -504,11 +505,15 @@ export default async function HomePage({ params }: Args) {
 
   const posts = (await getAllNews(locale)).slice(0, 4)
   const events = (await getAllEvents(locale)).slice(0, 4)
+  const liveAnnouncements = await getActiveAnnouncements(locale)
 
   const featuredPost = posts[0]
   const stackPosts = posts.slice(1, 4)
   const stackFallback = NEWS_STACK[locale] || NEWS_STACK.en
-  const announcements = ANNOUNCEMENTS[locale] || ANNOUNCEMENTS.en
+  const announcementsFallback = ANNOUNCEMENTS[locale] || ANNOUNCEMENTS.en
+  const announcements = liveAnnouncements.length > 0
+    ? liveAnnouncements.slice(0, 4).map((a) => ({ t: a.title, b: a.body || '' }))
+    : announcementsFallback
   const lebanese = LEBANESE_DIVISIONS[locale] || LEBANESE_DIVISIONS.en
   const intl = INTL_DIVISIONS[locale] || INTL_DIVISIONS.en
   const whyItems = WHY_ITEMS[locale] || WHY_ITEMS.en
