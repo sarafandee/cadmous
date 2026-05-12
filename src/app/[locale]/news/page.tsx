@@ -61,7 +61,7 @@ export default async function NewsPage({ params }: Args) {
       <PageHeader
         locale={locale}
         title={t.title}
-        breadcrumb={[{ label: t.bcMore }, { label: t.bcThis }]}
+        breadcrumb={[{ label: t.bcThis }]}
       />
       {featured && (
         <Section>

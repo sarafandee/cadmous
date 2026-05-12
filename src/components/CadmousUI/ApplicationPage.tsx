@@ -35,7 +35,7 @@ export function ApplicationPageShell({
       <PageHeader
         locale={locale}
         title={title}
-        breadcrumb={[{ label: labels.bcAdmissions }, { label: labels.bcThis }]}
+        breadcrumb={[{ label: labels.bcAdmissions, href: '/requirements' }, { label: labels.bcThis }]}
       />
       <Section>
         <div className="grid items-start gap-12 lg:grid-cols-[1fr_320px]">

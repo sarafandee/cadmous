@@ -8,9 +8,12 @@ node /app/scripts/migrate.mjs
 # ADMIN_EMAIL/ADMIN_PASSWORD aren't set in the environment.
 node /app/scripts/seed-admin.mjs || echo "[entrypoint] seed-admin exited non-zero; continuing"
 
-# First-boot only: seed scraped news + events into the DB. The --if-empty
-# flag makes this a no-op once news_posts or events have any rows.
-node /app/scripts/seed-news-events.mjs --if-empty || echo "[entrypoint] seed-news-events exited non-zero; continuing"
+# Seed scraped news + events into the DB. The --if-stale flag compares
+# the SEED_VERSION baked into the script against the stored value in
+# site_settings (key `seed.news-events.version`) — seed only when the
+# stored version is older. Lets us push translation updates by bumping
+# SEED_VERSION; subsequent boots no-op once seeded.
+node /app/scripts/seed-news-events.mjs --if-stale || echo "[entrypoint] seed-news-events exited non-zero; continuing"
 
 # Hand off to the Next.js standalone server.
 exec node /app/server.js
