@@ -31,7 +31,6 @@ const fetchPublished = unstable_cache(
       orderBy: [asc(events.startDate)],
       with: {
         translations: { columns: { locale: true, title: true, description: true } },
-        image: { columns: { path: true } },
       },
     })
     return rows.map((r) => ({
@@ -40,7 +39,7 @@ const fetchPublished = unstable_cache(
       startDateIso: r.startDate.toISOString(),
       endDateIso: r.endDate?.toISOString() ?? null,
       location: r.location,
-      imagePath: r.image?.path ?? null,
+      imagePath: r.imagePath,
       translations: r.translations,
     }))
   },

@@ -66,6 +66,7 @@ export async function createEventAction(values: EventFormValues): Promise<Action
       endDate: v.endDate ? new Date(v.endDate) : null,
       location: v.location || null,
       status: v.status,
+      imagePath: v.imagePath || null,
     })
     .returning({ id: events.id })
 
@@ -122,6 +123,7 @@ export async function updateEventAction(
       endDate: v.endDate ? new Date(v.endDate) : null,
       location: v.location || null,
       status: v.status,
+      imagePath: v.imagePath || null,
     })
     .where(eq(events.id, id))
 

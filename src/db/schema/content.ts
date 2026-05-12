@@ -41,9 +41,9 @@ export const newsPosts = sqliteTable(
     id: id(),
     slug: text('slug').notNull(),
     publishedAt: integer('published_at', { mode: 'timestamp_ms' }).notNull(),
-    imageMediaId: text('image_media_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
+    /** @deprecated unused; superseded by imagePath. Kept for back-compat of migration 0001. */
+    imageMediaId: text('image_media_id'),
+    imagePath: text('image_path'),
     status: text('status', { enum: STATUSES }).notNull().default('draft'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -79,9 +79,9 @@ export const events = sqliteTable(
     startDate: integer('start_date', { mode: 'timestamp_ms' }).notNull(),
     endDate: integer('end_date', { mode: 'timestamp_ms' }),
     location: text('location'),
-    imageMediaId: text('image_media_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
+    /** @deprecated unused; superseded by imagePath. */
+    imageMediaId: text('image_media_id'),
+    imagePath: text('image_path'),
     status: text('status', { enum: STATUSES }).notNull().default('draft'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -175,9 +175,8 @@ export const auditLog = sqliteTable(
 
 // ──────────────── relations ────────────────
 
-export const newsRelations = relations(newsPosts, ({ many, one }) => ({
+export const newsRelations = relations(newsPosts, ({ many }) => ({
   translations: many(newsTranslations),
-  image: one(media, { fields: [newsPosts.imageMediaId], references: [media.id] }),
 }))
 
 export const newsTranslationsRelations = relations(newsTranslations, ({ one }) => ({
@@ -187,9 +186,8 @@ export const newsTranslationsRelations = relations(newsTranslations, ({ one }) =
   }),
 }))
 
-export const eventsRelations = relations(events, ({ many, one }) => ({
+export const eventsRelations = relations(events, ({ many }) => ({
   translations: many(eventTranslations),
-  image: one(media, { fields: [events.imageMediaId], references: [media.id] }),
 }))
 
 export const eventTranslationsRelations = relations(eventTranslations, ({ one }) => ({

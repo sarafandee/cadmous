@@ -21,6 +21,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { LOCALES, type Locale } from '@/db/schema/content'
 import { slugify } from '@/lib/admin/slug'
 
+import { MediaPicker } from '../../_components/MediaPicker'
+
 import {
   createNewsAction,
   deleteNewsAction,
@@ -203,6 +205,22 @@ export function NewsForm(props: NewsFormProps) {
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
                   </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="imagePath"
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FormLabel>Featured image</FormLabel>
+                <FormControl>
+                  <MediaPicker
+                    value={field.value ?? ''}
+                    onChange={(p) => field.onChange(p)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

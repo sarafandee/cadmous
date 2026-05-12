@@ -30,6 +30,7 @@ export default async function EditEventPage({ params }: Args) {
     startDate: event.startDate.toISOString().slice(0, 16),
     endDate: event.endDate ? event.endDate.toISOString().slice(0, 16) : '',
     location: event.location ?? '',
+    imagePath: event.imagePath ?? '',
     status: event.status,
     translations: LOCALES.reduce(
       (acc, l) => {

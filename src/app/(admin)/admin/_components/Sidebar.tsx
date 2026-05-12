@@ -36,6 +36,10 @@ const GROUPS: Group[] = [
       { href: '/admin/submissions/applications', label: 'Applications' },
     ],
   },
+  {
+    label: 'Access',
+    items: [{ href: '/admin/users', label: 'Users' }],
+  },
 ]
 
 function isActive(pathname: string, href: string) {
