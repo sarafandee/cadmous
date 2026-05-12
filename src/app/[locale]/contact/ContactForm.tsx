@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { submitContactForm, type ContactResult } from './actions'
 
 export function ContactForm() {
   const t = useTranslations('contact')
+  const locale = useLocale()
   const [result, setResult] = useState<ContactResult | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -68,6 +69,8 @@ export function ContactForm() {
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
       </div>
+
+      <input type="hidden" name="locale" value={locale} />
 
       {/* Honeypot - hidden from users */}
       <div className="hidden" aria-hidden="true">
