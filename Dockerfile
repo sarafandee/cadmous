@@ -34,6 +34,13 @@ RUN pnpm exec esbuild scripts/seed-news-events.ts \
   --banner:js='import {createRequire} from "module"; const require=createRequire(import.meta.url);' \
   --outfile=.next/seed-news-events.mjs
 
+RUN pnpm exec esbuild scripts/seed-settings.ts \
+  --bundle --platform=node --target=node22 --format=esm \
+  --tsconfig=tsconfig.json \
+  --external:better-sqlite3 \
+  --banner:js='import {createRequire} from "module"; const require=createRequire(import.meta.url);' \
+  --outfile=.next/seed-settings.mjs
+
 # Production
 FROM base AS runner
 WORKDIR /app
@@ -59,6 +66,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/.next/seed-admin.mjs ./scripts/seed-admin.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/.next/seed-news-events.mjs ./scripts/seed-news-events.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/.next/seed-settings.mjs ./scripts/seed-settings.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh

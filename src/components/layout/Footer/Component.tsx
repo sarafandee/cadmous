@@ -61,6 +61,7 @@ export async function Footer() {
   const phone = settings['contact.phone']
   const address = settings['contact.address'] || t.addressFallback
   const facebook = settings['social.facebook']
+  const instagram = settings['social.instagram']
 
   return (
     <footer className="mt-auto bg-navy-900 text-white">
@@ -72,15 +73,29 @@ export async function Footer() {
               {t.ib}
             </p>
             <p className="mt-4 text-sm text-navy-200">{address}</p>
-            {facebook && (
-              <a
-                href={facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-block text-xs text-navy-200 underline-offset-4 hover:text-white hover:underline"
-              >
-                Facebook
-              </a>
+            {(facebook || instagram) && (
+              <div className="mt-3 flex gap-4 text-xs text-navy-200">
+                {facebook && (
+                  <a
+                    href={facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline-offset-4 hover:text-white hover:underline"
+                  >
+                    Facebook
+                  </a>
+                )}
+                {instagram && (
+                  <a
+                    href={instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline-offset-4 hover:text-white hover:underline"
+                  >
+                    Instagram
+                  </a>
+                )}
+              </div>
             )}
           </div>
 

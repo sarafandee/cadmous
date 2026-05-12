@@ -15,7 +15,9 @@ const COPY = {
       'We welcome your inquiries. Please fill out the form below and we will get back to you shortly.',
     address: 'Address',
     phone: 'Phone',
+    fax: 'Fax',
     email: 'Email',
+    follow: 'Follow us',
     addressFallback: 'Cadmous College, Lebanon',
   },
   fr: {
@@ -24,7 +26,9 @@ const COPY = {
       'Nous accueillons vos demandes. Veuillez remplir le formulaire ci-dessous et nous vous répondrons rapidement.',
     address: 'Adresse',
     phone: 'Téléphone',
+    fax: 'Fax',
     email: 'E-mail',
+    follow: 'Suivez-nous',
     addressFallback: 'Collège Cadmous, Liban',
   },
   ar: {
@@ -32,7 +36,9 @@ const COPY = {
     subtitle: 'نرحب باستفساراتكم. يرجى ملء النموذج أدناه وسنتواصل معكم في أقرب وقت.',
     address: 'العنوان',
     phone: 'الهاتف',
+    fax: 'الفاكس',
     email: 'البريد الإلكتروني',
+    follow: 'تابعونا',
     addressFallback: 'مدرسة قدموس، لبنان',
   },
 } as const
@@ -44,7 +50,10 @@ export default async function ContactPage({ params }: Args) {
   const settings = await getSettings(locale)
   const address = settings['contact.address'] || t.addressFallback
   const phone = settings['contact.phone']
+  const fax = settings['contact.fax']
   const email = settings['contact.email']
+  const facebook = settings['social.facebook']
+  const instagram = settings['social.instagram']
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -74,6 +83,15 @@ export default async function ContactPage({ params }: Args) {
               </div>
             )}
 
+            {fax && (
+              <div>
+                <h3 className="mb-2 font-semibold">{t.fax}</h3>
+                <p className="text-gray-600" dir="ltr">
+                  {fax}
+                </p>
+              </div>
+            )}
+
             {email && (
               <div>
                 <h3 className="mb-2 font-semibold">{t.email}</h3>
@@ -82,6 +100,34 @@ export default async function ContactPage({ params }: Args) {
                     {email}
                   </a>
                 </p>
+              </div>
+            )}
+
+            {(facebook || instagram) && (
+              <div>
+                <h3 className="mb-2 font-semibold">{t.follow}</h3>
+                <div className="flex gap-4 text-gray-600">
+                  {facebook && (
+                    <a
+                      href={facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-blue-700"
+                    >
+                      Facebook
+                    </a>
+                  )}
+                  {instagram && (
+                    <a
+                      href={instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-blue-700"
+                    >
+                      Instagram
+                    </a>
+                  )}
+                </div>
               </div>
             )}
           </div>

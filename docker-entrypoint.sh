@@ -15,5 +15,10 @@ node /app/scripts/seed-admin.mjs || echo "[entrypoint] seed-admin exited non-zer
 # SEED_VERSION; subsequent boots no-op once seeded.
 node /app/scripts/seed-news-events.mjs --if-stale || echo "[entrypoint] seed-news-events exited non-zero; continuing"
 
+# Same versioned-seed pattern for site_settings (contact info, social links).
+# Bumping SEED_VERSION in scripts/seed-settings.ts triggers a re-upsert on
+# the next deploy.
+node /app/scripts/seed-settings.mjs --if-stale || echo "[entrypoint] seed-settings exited non-zero; continuing"
+
 # Hand off to the Next.js standalone server.
 exec node /app/server.js

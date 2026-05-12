@@ -25,3 +25,4 @@ node_modules/
 /media/
 .gstack/
 .claude/
+.playwright-mcp/
