@@ -20,4 +20,13 @@ export type SchoolEvent = {
   image?: string
 }
 
+export type Announcement = {
+  id: string
+  severity: 'info' | 'warning' | 'critical'
+  title: string
+  body?: string
+  startsAt?: string
+  endsAt?: string
+}
+
 export type LocalizedContent<T> = Record<Locale, T[]>

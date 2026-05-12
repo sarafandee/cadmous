@@ -6,6 +6,7 @@ import React from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import { auth } from '@/lib/auth'
 import { SignOutButton } from './_components/SignOutButton'
+import { Sidebar } from './_components/Sidebar'
 
 export const metadata: Metadata = {
   title: {
@@ -22,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <header className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           <Link href="/admin" className="flex items-center gap-2">
             <span className="grid h-7 w-7 place-items-center rounded bg-zinc-900 text-[12px] font-bold text-white">
               C
@@ -37,8 +38,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           )}
         </div>
       </header>
-      {children}
-      <Toaster richColors closeButton />
+
+      {isLoggedIn ? (
+        <div className="mx-auto flex max-w-7xl gap-8 px-6 py-8">
+          <aside className="hidden w-52 shrink-0 md:block">
+            <Sidebar />
+          </aside>
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
+      ) : (
+        children
+      )}
+
+      <Toaster richColors closeButton position="top-right" />
     </div>
   )
 }
