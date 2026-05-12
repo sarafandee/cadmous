@@ -18,14 +18,21 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run build
 
-# Bundle the admin-seed script into a single self-contained .mjs so the
-# runtime image doesn't need src/, tsx, or better-auth's node_modules.
+# Bundle the seed scripts into single self-contained .mjs files so the
+# runtime image doesn't need src/, tsx, or extra node_modules.
 RUN pnpm exec esbuild scripts/seed-admin.ts \
   --bundle --platform=node --target=node22 --format=esm \
   --tsconfig=tsconfig.json \
   --external:better-sqlite3 \
   --banner:js='import {createRequire} from "module"; const require=createRequire(import.meta.url);' \
   --outfile=.next/seed-admin.mjs
+
+RUN pnpm exec esbuild scripts/seed-news-events.ts \
+  --bundle --platform=node --target=node22 --format=esm \
+  --tsconfig=tsconfig.json \
+  --external:better-sqlite3 \
+  --banner:js='import {createRequire} from "module"; const require=createRequire(import.meta.url);' \
+  --outfile=.next/seed-news-events.mjs
 
 # Production
 FROM base AS runner
@@ -51,6 +58,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # directly from the deps stage so the entrypoint can import them.
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/.next/seed-admin.mjs ./scripts/seed-admin.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/.next/seed-news-events.mjs ./scripts/seed-news-events.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh

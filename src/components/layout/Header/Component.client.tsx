@@ -64,9 +64,11 @@ export const HeaderClient: React.FC = () => {
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)]">
         <div className="flex items-center justify-between py-3.5">
           <Link href="/" className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-[6px] border border-crimson-400 bg-crimson-500/10 text-[16px] font-bold tracking-[0.04em] text-crimson-400">
-              C
-            </div>
+            <img
+              src="/images/seed/logo-small.png"
+              alt={l.school}
+              className="h-10 w-auto"
+            />
             <div className="leading-tight">
               <div className="text-[17px] font-bold tracking-[0.005em] text-white">
                 {l.school}

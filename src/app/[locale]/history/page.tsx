@@ -73,6 +73,15 @@ export default async function Page({ params }: Args) {
           }
         />
       </Section>
+      <Section alt>
+        <div className="overflow-hidden rounded-[6px] border border-white/10">
+          <img
+            src="/images/seed/cadmous-banner.png"
+            alt="Cadmous College banner"
+            className="w-full"
+          />
+        </div>
+      </Section>
     </>
   )
 }
