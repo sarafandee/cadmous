@@ -39,7 +39,17 @@ async function prompt(question: string, secret = false): Promise<string> {
 }
 
 async function main() {
-  const email = process.env.ADMIN_EMAIL ?? (await prompt('Admin email: '))
+  const envEmail = process.env.ADMIN_EMAIL
+  const isTTY = !!input.isTTY
+
+  // Container/non-interactive: require env vars; skip silently if absent
+  // so that wiring this into docker-entrypoint.sh is safe.
+  if (!isTTY && (!envEmail || !process.env.ADMIN_PASSWORD)) {
+    console.log('[seed-admin] ADMIN_EMAIL/ADMIN_PASSWORD not set; skipping.')
+    return
+  }
+
+  const email = envEmail ?? (await prompt('Admin email: '))
   if (!email) throw new Error('Email required')
 
   const existing = await db.select().from(user).where(eq(user.email, email)).limit(1)
