@@ -7,6 +7,11 @@ import { Footer } from '@/components/layout/Footer/Component'
 import { Header } from '@/components/layout/Header/Component'
 import { routing, type Locale } from '@/i18n/routing'
 
+// Content is DB-backed (Footer/Header read settings; pages read news/events/CMS blocks).
+// Render every request server-side and rely on the data layer's unstable_cache
+// tags + admin updateTag() calls for invalidation.
+export const dynamic = 'force-dynamic'
+
 type Props = {
   children: React.ReactNode
   params: Promise<{ locale: string }>
