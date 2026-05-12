@@ -25,6 +25,7 @@ export const eventFormSchema = z
       'Invalid date',
     ),
     location: z.string().trim().max(200).optional().or(z.literal('')),
+    imagePath: z.string().trim().max(2000).optional().or(z.literal('')),
     status: z.enum(STATUSES),
     translations: z.object(
       LOCALES.reduce(

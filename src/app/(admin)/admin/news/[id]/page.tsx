@@ -31,7 +31,7 @@ export default async function EditNewsPage({ params }: Args) {
     slug: post.slug,
     publishedAt: post.publishedAt.toISOString().slice(0, 16),
     status: post.status,
-    imagePath: '',
+    imagePath: post.imagePath ?? '',
     translations: LOCALES.reduce(
       (acc, l) => {
         const t = translationsMap[l]

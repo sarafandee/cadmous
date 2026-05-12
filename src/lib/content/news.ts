@@ -31,14 +31,13 @@ const fetchPublished = unstable_cache(
         translations: {
           columns: { locale: true, title: true, summary: true, body: true },
         },
-        image: { columns: { path: true } },
       },
     })
     return rows.map((r) => ({
       id: r.id,
       slug: r.slug,
       publishedAtIso: r.publishedAt.toISOString(),
-      imagePath: r.image?.path ?? null,
+      imagePath: r.imagePath,
       translations: r.translations,
     }))
   },

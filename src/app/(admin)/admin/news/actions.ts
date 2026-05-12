@@ -70,7 +70,7 @@ export async function createNewsAction(values: NewsFormValues): Promise<ActionRe
       slug: v.slug,
       publishedAt: new Date(v.publishedAt),
       status: v.status,
-      imageMediaId: null, // image media-id wiring in a follow-up; we store path in translations only for now
+      imagePath: v.imagePath || null,
     })
     .returning({ id: newsPosts.id })
 
@@ -133,6 +133,7 @@ export async function updateNewsAction(
       slug: v.slug,
       publishedAt: new Date(v.publishedAt),
       status: v.status,
+      imagePath: v.imagePath || null,
     })
     .where(eq(newsPosts.id, id))
 
