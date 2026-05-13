@@ -85,11 +85,19 @@ export const confirmationSchema = z.object({
   }),
 })
 
+// Documents are uploaded separately to the public upload endpoint as
+// soon as the user picks a file — they live in the application_documents
+// table keyed by the wizard's draftId. The wizard tracks an in-memory
+// list for the review step; we don't validate the list as part of the
+// form schema since the rows are the source of truth.
+export const documentsSchema = z.object({})
+
 export const fullApplicationSchema = studentInfoSchema
   .merge(previousSchoolSchema)
   .merge(guardian1Schema)
   .merge(guardian2Schema)
   .merge(familySchema)
+  .merge(documentsSchema)
   .merge(confirmationSchema)
 
 export type ApplicationFormData = z.infer<typeof fullApplicationSchema>
@@ -100,8 +108,10 @@ export const stepSchemas = [
   guardian1Schema,
   guardian2Schema,
   familySchema,
+  documentsSchema,
   confirmationSchema,
 ] as const
 
 export const DRAFT_STORAGE_KEY = 'cadmous-application-draft'
-export const DRAFT_SCHEMA_VERSION = 1
+export const DRAFT_ID_STORAGE_KEY = 'cadmous-application-draft-id'
+export const DRAFT_SCHEMA_VERSION = 2

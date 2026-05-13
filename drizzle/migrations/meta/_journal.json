@@ -43,6 +43,13 @@
       "when": 1778597590104,
       "tag": "0005_drop_pages_divisions",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1778651309809,
+      "tag": "0006_great_nomad",
+      "breakpoints": true
     }
   ]
 }

@@ -2,9 +2,13 @@
 
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
-import type { ApplicationFormData } from '../schema'
 
-export function StepConfirmation() {
+import { DOCUMENT_KIND_LABELS, type DocumentKind } from '@/lib/applications/documents'
+
+import type { ApplicationFormData } from '../schema'
+import type { UploadedDoc } from './StepDocuments'
+
+export function StepConfirmation({ uploads = [] }: { uploads?: UploadedDoc[] }) {
   const { watch, register, formState: { errors } } = useFormContext<ApplicationFormData>()
   const data = watch()
 
@@ -64,21 +68,25 @@ export function StepConfirmation() {
         />
       </Section>
 
-      <div className="rounded-[6px] border border-crimson-400/40 bg-crimson-500/10 p-5">
-        <h4 className="mb-2 text-[14px] font-bold tracking-[-0.005em] text-white">
-          Required Documents
-        </h4>
-        <p className="mb-3 text-[13px] text-white/70">
-          Please ensure you provide the following documents to the school:
-        </p>
-        <ul className="list-inside list-disc space-y-1 text-[13px] text-white/70">
-          <li>Passport Copy</li>
-          <li>Two Passport Photographs</li>
-          <li>Previous School Report Card</li>
-          <li>Medical and Vaccination Report</li>
-          <li>Passing Certificate (certified by Ministry of Education)</li>
-        </ul>
-      </div>
+      <Section title="Documents Attached">
+        {uploads.length === 0 ? (
+          <p className="text-[13px] text-white/60">
+            No documents uploaded yet. You may proceed and submit them later, but
+            providing them now will speed up your application.
+          </p>
+        ) : (
+          <ul className="space-y-1.5">
+            {uploads.map((u) => (
+              <li key={u.id} className="flex flex-wrap text-[13.5px]">
+                <span className="w-44 shrink-0 text-white/50">
+                  {DOCUMENT_KIND_LABELS[u.kind as DocumentKind] ?? u.kind}
+                </span>
+                <span className="text-white">{u.originalName}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
 
       <div className="rounded-[6px] border border-white/10 bg-navy-900/40 p-5">
         <label className="flex cursor-pointer items-start gap-3">
