@@ -1,51 +1,54 @@
 'use client'
 
 import React from 'react'
+
 import { FormInput, FormSelect, FormRow } from '../FormField'
+import { useFormLabels } from '../labels-context'
 
 export function StepStudentInfo() {
+  const l = useFormLabels()
   return (
     <div className="space-y-4">
       <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
-        Student Information
+        {l.studentTitle}
       </h3>
 
       <FormRow>
-        <FormInput name="studentFirstName" label="First Name" required />
-        <FormInput name="studentMiddleName" label="Father's Name / Middle Name" required />
-        <FormInput name="studentFamilyName" label="Family Name" required />
+        <FormInput name="studentFirstName" label={l.firstName} required />
+        <FormInput name="studentMiddleName" label={l.middleName} required />
+        <FormInput name="studentFamilyName" label={l.familyName} required />
       </FormRow>
 
       <FormRow>
         <FormSelect
           name="studentGender"
-          label="Gender"
+          label={l.gender}
           required
           options={[
-            { label: 'Male', value: 'male' },
-            { label: 'Female', value: 'female' },
+            { label: l.male, value: 'male' },
+            { label: l.female, value: 'female' },
           ]}
         />
-        <FormInput name="studentDOB" label="Date of Birth" type="date" required />
+        <FormInput name="studentDOB" label={l.dob} type="date" required />
       </FormRow>
 
       <FormRow>
-        <FormInput name="studentPlaceOfBirth" label="Place of Birth" required />
-        <FormInput name="studentNationality" label="Nationality" required />
-        <FormInput name="studentSecondNationality" label="Second Nationality" />
+        <FormInput name="studentPlaceOfBirth" label={l.placeOfBirth} required />
+        <FormInput name="studentNationality" label={l.nationality} required />
+        <FormInput name="studentSecondNationality" label={l.secondNationality} />
       </FormRow>
 
       <FormRow>
         <FormSelect
           name="requiresTransportation"
-          label="Does your child require transportation?"
+          label={l.transportation}
           required
           options={[
-            { label: 'Yes', value: 'yes' },
-            { label: 'No', value: 'no' },
+            { label: l.yes, value: 'yes' },
+            { label: l.no, value: 'no' },
           ]}
         />
-        <FormInput name="gradeApplying" label="Grade Applying For" required />
+        <FormInput name="gradeApplying" label={l.gradeApplying} required />
       </FormRow>
     </div>
   )

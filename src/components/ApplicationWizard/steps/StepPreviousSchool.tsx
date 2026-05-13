@@ -2,10 +2,13 @@
 
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
+
 import { FormInput, FormSelect, FormRow } from '../FormField'
+import { useFormLabels } from '../labels-context'
 import type { ApplicationFormData } from '../schema'
 
 export function StepPreviousSchool() {
+  const l = useFormLabels()
   const { watch } = useFormContext<ApplicationFormData>()
   const hasSkipped = watch('hasSkippedOrRepeated')
   const hasSpecialNeeds = watch('hasSpecialNeeds')
@@ -13,42 +16,46 @@ export function StepPreviousSchool() {
   return (
     <div className="space-y-4">
       <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
-        Previous School Information
+        {l.prevSchoolTitle}
       </h3>
 
-      <FormInput name="previousSchool" label="Previous School" />
+      <FormInput name="previousSchool" label={l.previousSchool} />
 
       <FormRow>
-        <FormInput name="previousSchoolCountry" label="Country of Previous School" />
-        <FormInput name="previousGradeLevel" label="Previous Grade/Level Attended" required />
+        <FormInput name="previousSchoolCountry" label={l.previousSchoolCountry} />
+        <FormInput name="previousGradeLevel" label={l.previousGradeLevel} required />
       </FormRow>
 
-      <FormInput name="languagesSpokenAtHome" label="Languages Spoken at Home" required />
+      <FormInput name="languagesSpokenAtHome" label={l.languagesAtHome} required />
 
       <FormSelect
         name="hasSkippedOrRepeated"
-        label="Has your child ever skipped or been asked to repeat a year?"
+        label={l.skippedOrRepeated}
         required
         options={[
-          { label: 'Yes', value: 'yes' },
-          { label: 'No', value: 'no' },
+          { label: l.yes, value: 'yes' },
+          { label: l.no, value: 'no' },
         ]}
       />
       {hasSkipped === 'yes' && (
-        <FormInput name="skippedOrRepeatedDetails" label="Please specify" type="textarea" />
+        <FormInput
+          name="skippedOrRepeatedDetails"
+          label={l.pleaseSpecify}
+          type="textarea"
+        />
       )}
 
       <FormSelect
         name="hasSpecialNeeds"
-        label="Has your child been involved in any advanced, gifted, or special needs program?"
+        label={l.specialNeeds}
         required
         options={[
-          { label: 'Yes', value: 'yes' },
-          { label: 'No', value: 'no' },
+          { label: l.yes, value: 'yes' },
+          { label: l.no, value: 'no' },
         ]}
       />
       {hasSpecialNeeds === 'yes' && (
-        <FormInput name="specialNeedsDetails" label="Please specify" type="textarea" />
+        <FormInput name="specialNeedsDetails" label={l.pleaseSpecify} type="textarea" />
       )}
     </div>
   )

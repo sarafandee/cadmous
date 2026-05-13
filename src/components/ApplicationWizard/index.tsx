@@ -3,8 +3,9 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from 'next-intl'
 
+import { FormLabelsProvider } from './labels-context'
+import { FORM_LABELS, isAppLang, type AppLang } from './labels'
 import {
   stepSchemas,
   fullApplicationSchema,
@@ -86,8 +87,9 @@ type Props = {
 }
 
 export function ApplicationWizard({ locale, appLang }: Props) {
-  const t = useTranslations('admissions')
-  const tc = useTranslations('common')
+  const resolvedAppLang: AppLang = isAppLang(appLang ?? '') ? (appLang as AppLang) : 'en'
+  const labels = FORM_LABELS[resolvedAppLang]
+  const dir = resolvedAppLang === 'ar' ? 'rtl' : 'ltr'
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitResult, setSubmitResult] = useState<SubmitResult | null>(null)
@@ -119,13 +121,13 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   }, [watchedData, currentStep, uploads])
 
   const stepLabels = [
-    t('studentInfo'),
-    t('previousSchool'),
-    t('guardian1'),
-    t('guardian2'),
-    t('siblingsEmergency'),
-    'Documents',
-    t('review'),
+    labels.stepStudent,
+    labels.stepPreviousSchool,
+    labels.stepGuardian1,
+    labels.stepGuardian2,
+    labels.stepFamily,
+    labels.stepDocuments,
+    labels.stepReview,
   ]
   const totalSteps = stepLabels.length
 
@@ -210,14 +212,17 @@ export function ApplicationWizard({ locale, appLang }: Props) {
 
   if (submitResult?.success) {
     return (
-      <div className="rounded-[6px] border border-crimson-400 bg-crimson-500/10 p-8 text-white">
+      <div
+        dir={dir}
+        className="rounded-[6px] border border-crimson-400 bg-crimson-500/10 p-8 text-white"
+      >
         <div className="mb-4 text-3xl">✓</div>
         <h2 className="mb-2 text-2xl font-bold leading-tight tracking-[-0.015em]">
-          {t('confirmationTitle')}
+          {labels.successTitle}
         </h2>
-        <p className="text-[15px] text-white/80">{t('confirmationMessage')}</p>
+        <p className="text-[15px] text-white/80">{labels.successMessage}</p>
         <p className="mt-4 text-[12px] uppercase tracking-[0.06em] text-white/40">
-          Application ID: #{submitResult.id}
+          {labels.applicationId}: #{submitResult.id}
         </p>
       </div>
     )
@@ -227,67 +232,69 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   const isLastStep = currentStep === totalSteps - 1
 
   return (
-    <div className="w-full">
-      <ProgressBar
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        labels={stepLabels}
-      />
+    <FormLabelsProvider appLang={resolvedAppLang}>
+      <div dir={dir} className="w-full">
+        <ProgressBar
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          labels={stepLabels}
+        />
 
-      <FormProvider {...methods}>
-        <form onSubmit={(e) => e.preventDefault()} className="mt-10">
-          {currentStep === 0 && <StepStudentInfo />}
-          {currentStep === 1 && <StepPreviousSchool />}
-          {currentStep === 2 && <StepGuardian1 />}
-          {currentStep === 3 && <StepGuardian2 />}
-          {currentStep === 4 && <StepFamily />}
-          {isDocsStep && draftId && (
-            <StepDocuments
-              draftId={draftId}
-              uploads={uploads}
-              onAdded={handleDocAdded}
-              onRemoved={handleDocRemoved}
-            />
-          )}
-          {isLastStep && <StepConfirmation uploads={uploads} />}
-
-          {submitResult && !submitResult.success && submitResult.errors._form && (
-            <div className="mt-4 rounded-[4px] border border-crimson-500 bg-crimson-500/10 p-4 text-[13px] text-crimson-400">
-              {submitResult.errors._form}
-            </div>
-          )}
-
-          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
-            <button
-              type="button"
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className="rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
-            >
-              {tc('previous')}
-            </button>
-
-            {isLastStep ? (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400 disabled:opacity-50"
-              >
-                {isSubmitting ? '…' : t('applyNow')}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
-              >
-                {tc('next')}
-              </button>
+        <FormProvider {...methods}>
+          <form onSubmit={(e) => e.preventDefault()} className="mt-10">
+            {currentStep === 0 && <StepStudentInfo />}
+            {currentStep === 1 && <StepPreviousSchool />}
+            {currentStep === 2 && <StepGuardian1 />}
+            {currentStep === 3 && <StepGuardian2 />}
+            {currentStep === 4 && <StepFamily />}
+            {isDocsStep && draftId && (
+              <StepDocuments
+                draftId={draftId}
+                uploads={uploads}
+                onAdded={handleDocAdded}
+                onRemoved={handleDocRemoved}
+              />
             )}
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+            {isLastStep && <StepConfirmation uploads={uploads} />}
+
+            {submitResult && !submitResult.success && submitResult.errors._form && (
+              <div className="mt-4 rounded-[4px] border border-crimson-500 bg-crimson-500/10 p-4 text-[13px] text-crimson-400">
+                {submitResult.errors._form}
+              </div>
+            )}
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
+              <button
+                type="button"
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className="rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
+              >
+                {labels.previous}
+              </button>
+
+              {isLastStep ? (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400 disabled:opacity-50"
+                >
+                  {isSubmitting ? '…' : labels.submit}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
+                >
+                  {labels.next}
+                </button>
+              )}
+            </div>
+          </form>
+        </FormProvider>
+      </div>
+    </FormLabelsProvider>
   )
 }
