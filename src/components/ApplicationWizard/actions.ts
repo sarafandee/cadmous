@@ -1,7 +1,9 @@
 'use server'
 
+import { and, eq, isNull } from 'drizzle-orm'
+
 import { db } from '@/db/client'
-import { applications } from '@/db/schema/submissions'
+import { applicationDocuments, applications } from '@/db/schema/submissions'
 import { rateLimit } from '@/lib/submissions/rate-limit'
 import { getRequestMeta } from '@/lib/submissions/request-meta'
 
@@ -15,6 +17,7 @@ export async function submitApplication(
   data: ApplicationFormData,
   locale: string,
   appLang: string = locale,
+  draftId?: string,
 ): Promise<SubmitResult> {
   const parsed = fullApplicationSchema.safeParse(data)
   if (!parsed.success) {
@@ -66,5 +69,20 @@ export async function submitApplication(
     })
     .returning({ id: applications.id })
 
-  return { success: true, id: inserted[0].id }
+  const newApplicationId = inserted[0].id
+
+  // Link any documents that were uploaded against this draftId.
+  if (draftId && /^[0-9a-f-]{36}$/i.test(draftId)) {
+    await db
+      .update(applicationDocuments)
+      .set({ applicationId: newApplicationId })
+      .where(
+        and(
+          eq(applicationDocuments.draftId, draftId),
+          isNull(applicationDocuments.applicationId),
+        ),
+      )
+  }
+
+  return { success: true, id: newApplicationId }
 }

@@ -11,6 +11,7 @@ import {
   type ApplicationFormData,
   DRAFT_STORAGE_KEY,
   DRAFT_SCHEMA_VERSION,
+  DRAFT_ID_STORAGE_KEY,
 } from './schema'
 import { submitApplication, type SubmitResult } from './actions'
 import { StepStudentInfo } from './steps/StepStudentInfo'
@@ -18,22 +19,15 @@ import { StepPreviousSchool } from './steps/StepPreviousSchool'
 import { StepGuardian1 } from './steps/StepGuardian1'
 import { StepGuardian2 } from './steps/StepGuardian2'
 import { StepFamily } from './steps/StepFamily'
+import { StepDocuments, type UploadedDoc } from './steps/StepDocuments'
 import { StepConfirmation } from './steps/StepConfirmation'
 import { ProgressBar } from './ProgressBar'
-
-const STEP_COMPONENTS = [
-  StepStudentInfo,
-  StepPreviousSchool,
-  StepGuardian1,
-  StepGuardian2,
-  StepFamily,
-  StepConfirmation,
-]
 
 type DraftData = {
   version: number
   step: number
   data: Partial<ApplicationFormData>
+  uploads?: UploadedDoc[]
 }
 
 function loadDraft(): DraftData | null {
@@ -48,9 +42,13 @@ function loadDraft(): DraftData | null {
   }
 }
 
-function saveDraft(step: number, data: Partial<ApplicationFormData>) {
+function saveDraft(
+  step: number,
+  data: Partial<ApplicationFormData>,
+  uploads: UploadedDoc[],
+) {
   try {
-    const draft: DraftData = { version: DRAFT_SCHEMA_VERSION, step, data }
+    const draft: DraftData = { version: DRAFT_SCHEMA_VERSION, step, data, uploads }
     sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
   } catch {
     // sessionStorage unavailable (Safari private browsing) - degrade silently
@@ -60,9 +58,26 @@ function saveDraft(step: number, data: Partial<ApplicationFormData>) {
 function clearDraft() {
   try {
     sessionStorage.removeItem(DRAFT_STORAGE_KEY)
+    sessionStorage.removeItem(DRAFT_ID_STORAGE_KEY)
   } catch {
     // ignore
   }
+}
+
+function getOrCreateDraftId(): string {
+  try {
+    const existing = sessionStorage.getItem(DRAFT_ID_STORAGE_KEY)
+    if (existing && /^[0-9a-f-]{36}$/i.test(existing)) return existing
+  } catch {
+    // sessionStorage unavailable
+  }
+  const id = crypto.randomUUID()
+  try {
+    sessionStorage.setItem(DRAFT_ID_STORAGE_KEY, id)
+  } catch {
+    // ignore
+  }
+  return id
 }
 
 type Props = {
@@ -76,6 +91,8 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitResult, setSubmitResult] = useState<SubmitResult | null>(null)
+  const [draftId, setDraftId] = useState<string>('')
+  const [uploads, setUploads] = useState<UploadedDoc[]>([])
 
   const methods = useForm<ApplicationFormData>({
     resolver: zodResolver(fullApplicationSchema),
@@ -85,22 +102,21 @@ export function ApplicationWizard({ locale, appLang }: Props) {
     },
   })
 
-  // Load draft on mount
+  // Initialise draftId and load draft on mount.
   useEffect(() => {
+    setDraftId(getOrCreateDraftId())
     const draft = loadDraft()
     if (draft) {
       methods.reset(draft.data as ApplicationFormData)
       setCurrentStep(draft.step)
+      if (draft.uploads) setUploads(draft.uploads)
     }
   }, [methods])
 
-  // Save draft on data change
   const watchedData = methods.watch()
   useEffect(() => {
-    if (currentStep < STEP_COMPONENTS.length - 1) {
-      saveDraft(currentStep, watchedData)
-    }
-  }, [watchedData, currentStep])
+    saveDraft(currentStep, watchedData, uploads)
+  }, [watchedData, currentStep, uploads])
 
   const stepLabels = [
     t('studentInfo'),
@@ -108,8 +124,10 @@ export function ApplicationWizard({ locale, appLang }: Props) {
     t('guardian1'),
     t('guardian2'),
     t('siblingsEmergency'),
+    'Documents',
     t('review'),
   ]
+  const totalSteps = stepLabels.length
 
   const handleNext = useCallback(async () => {
     const schema = stepSchemas[currentStep]
@@ -119,7 +137,6 @@ export function ApplicationWizard({ locale, appLang }: Props) {
     const result = schema.safeParse(values)
 
     if (!result.success) {
-      // Trigger validation on current step's fields
       const fieldNames = Object.keys(schema.shape) as (keyof ApplicationFormData)[]
       for (const field of fieldNames) {
         await methods.trigger(field)
@@ -127,8 +144,8 @@ export function ApplicationWizard({ locale, appLang }: Props) {
       return
     }
 
-    setCurrentStep((prev) => Math.min(prev + 1, STEP_COMPONENTS.length - 1))
-  }, [currentStep, methods])
+    setCurrentStep((prev) => Math.min(prev + 1, totalSteps - 1))
+  }, [currentStep, methods, totalSteps])
 
   const handlePrevious = useCallback(() => {
     setCurrentStep((prev) => Math.max(prev - 1, 0))
@@ -137,18 +154,16 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   const handleSubmit = useCallback(async () => {
     const values = methods.getValues()
 
-    // Validate confirmation checkbox
-    const confirmResult = stepSchemas[5]!.safeParse(values)
+    const confirmIndex = totalSteps - 1
+    const confirmResult = stepSchemas[confirmIndex]!.safeParse(values)
     if (!confirmResult.success) {
       await methods.trigger('confirmationAcknowledged')
       return
     }
 
-    // Validate full form
     const fullResult = fullApplicationSchema.safeParse(values)
     if (!fullResult.success) {
       const firstErrorField = fullResult.error.issues[0]?.path[0] as string
-      // Find which step this field belongs to
       for (let i = 0; i < stepSchemas.length; i++) {
         if (firstErrorField in stepSchemas[i]!.shape) {
           setCurrentStep(i)
@@ -160,16 +175,39 @@ export function ApplicationWizard({ locale, appLang }: Props) {
     }
 
     setIsSubmitting(true)
-    const result = await submitApplication(fullResult.data, locale, appLang ?? locale)
+    const result = await submitApplication(
+      fullResult.data,
+      locale,
+      appLang ?? locale,
+      draftId,
+    )
     setSubmitResult(result)
     setIsSubmitting(false)
 
     if (result.success) {
       clearDraft()
     }
-  }, [methods, locale, appLang])
+  }, [methods, locale, appLang, draftId, totalSteps])
 
-  // Success state
+  const handleDocAdded = useCallback((doc: UploadedDoc) => {
+    setUploads((prev) => [...prev, doc])
+  }, [])
+
+  const handleDocRemoved = useCallback(
+    async (id: string) => {
+      if (!draftId) return
+      try {
+        await fetch(`/api/applications/upload/${id}?draftId=${encodeURIComponent(draftId)}`, {
+          method: 'DELETE',
+        })
+      } catch {
+        // network failure — still drop from UI so user can re-upload
+      }
+      setUploads((prev) => prev.filter((u) => u.id !== id))
+    },
+    [draftId],
+  )
+
   if (submitResult?.success) {
     return (
       <div className="rounded-[6px] border border-crimson-400 bg-crimson-500/10 p-8 text-white">
@@ -185,20 +223,33 @@ export function ApplicationWizard({ locale, appLang }: Props) {
     )
   }
 
-  const StepComponent = STEP_COMPONENTS[currentStep]!
-  const isLastStep = currentStep === STEP_COMPONENTS.length - 1
+  const isDocsStep = currentStep === totalSteps - 2
+  const isLastStep = currentStep === totalSteps - 1
 
   return (
     <div className="w-full">
       <ProgressBar
         currentStep={currentStep}
-        totalSteps={STEP_COMPONENTS.length}
+        totalSteps={totalSteps}
         labels={stepLabels}
       />
 
       <FormProvider {...methods}>
         <form onSubmit={(e) => e.preventDefault()} className="mt-10">
-          <StepComponent />
+          {currentStep === 0 && <StepStudentInfo />}
+          {currentStep === 1 && <StepPreviousSchool />}
+          {currentStep === 2 && <StepGuardian1 />}
+          {currentStep === 3 && <StepGuardian2 />}
+          {currentStep === 4 && <StepFamily />}
+          {isDocsStep && draftId && (
+            <StepDocuments
+              draftId={draftId}
+              uploads={uploads}
+              onAdded={handleDocAdded}
+              onRemoved={handleDocRemoved}
+            />
+          )}
+          {isLastStep && <StepConfirmation uploads={uploads} />}
 
           {submitResult && !submitResult.success && submitResult.errors._form && (
             <div className="mt-4 rounded-[4px] border border-crimson-500 bg-crimson-500/10 p-4 text-[13px] text-crimson-400">

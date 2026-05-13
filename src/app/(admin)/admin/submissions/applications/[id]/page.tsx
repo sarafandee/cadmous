@@ -1,9 +1,10 @@
-import { eq } from 'drizzle-orm'
+import { asc, eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { db } from '@/db/client'
-import { applications } from '@/db/schema/submissions'
+import { applicationDocuments, applications } from '@/db/schema/submissions'
+import { DOCUMENT_KIND_LABELS, type DocumentKind } from '@/lib/applications/documents'
 import { requireAdmin } from '@/lib/admin/require-admin'
 
 import { RowActions } from '../../_components/RowActions'
@@ -120,6 +121,10 @@ export default async function ApplicationDetailPage({ params }: Args) {
 
   const payload = tryParse(row.payload) ?? {}
   const siblings = Array.isArray(payload.siblings) ? (payload.siblings as PayloadShape[]) : []
+  const documents = await db.query.applicationDocuments.findMany({
+    where: eq(applicationDocuments.applicationId, row.id),
+    orderBy: [asc(applicationDocuments.kind), asc(applicationDocuments.createdAt)],
+  })
 
   return (
     <main>
@@ -193,6 +198,40 @@ export default async function ApplicationDetailPage({ params }: Args) {
           </ul>
         </section>
       )}
+
+      <section className="mt-8">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+          Documents
+        </h2>
+        {documents.length === 0 ? (
+          <p className="mt-3 text-sm text-zinc-500">No documents uploaded.</p>
+        ) : (
+          <ul className="mt-3 grid gap-2">
+            {documents.map((d) => (
+              <li
+                key={d.id}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-zinc-200 bg-white px-4 py-2.5 text-sm"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs uppercase tracking-wide text-zinc-500">
+                    {DOCUMENT_KIND_LABELS[d.kind as DocumentKind] ?? d.kind}
+                  </div>
+                  <div className="mt-0.5 truncate font-medium">{d.originalName}</div>
+                  <div className="mt-0.5 text-xs text-zinc-500">
+                    {(d.size / 1024).toFixed(0)} KB · {d.mime}
+                  </div>
+                </div>
+                <a
+                  href={`/admin/api/applications/documents/${d.id}`}
+                  className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+                >
+                  Download
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   )
 }

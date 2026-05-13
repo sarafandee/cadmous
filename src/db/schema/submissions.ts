@@ -56,3 +56,28 @@ export const applications = sqliteTable(
     index('applications_archived_idx').on(t.archivedAt),
   ],
 )
+
+export const applicationDocuments = sqliteTable(
+  'application_documents',
+  {
+    id: id(),
+    // Draft id is the UUID the wizard generates on mount; uploads
+    // happen before the application row exists, so they're keyed by
+    // draftId. submitApplication links rows to the new application_id.
+    draftId: text('draft_id').notNull(),
+    applicationId: text('application_id').references(() => applications.id, {
+      onDelete: 'cascade',
+    }),
+    kind: text('kind').notNull(),
+    originalName: text('original_name').notNull(),
+    storedPath: text('stored_path').notNull(),
+    mime: text('mime').notNull(),
+    size: integer('size').notNull(),
+    ipHash: text('ip_hash'),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('app_docs_draft_idx').on(t.draftId),
+    index('app_docs_application_idx').on(t.applicationId),
+  ],
+)
