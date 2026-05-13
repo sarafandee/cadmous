@@ -27,7 +27,7 @@ export function DivisionPage(props: DivisionPageProps) {
       <PageHeader
         locale={locale}
         title={title}
-        breadcrumb={[{ label: labels.bcDivisions, href: '/kindergarten' }, { label: title }]}
+        breadcrumb={[{ label: labels.bcDivisions, href: '/divisions' }, { label: title }]}
       />
       <Section>
         <div className="grid items-start gap-12 lg:grid-cols-[1fr_320px]">

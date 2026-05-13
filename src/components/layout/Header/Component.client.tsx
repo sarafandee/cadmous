@@ -18,6 +18,7 @@ type NavLabels = {
   visionMission: string
   history: string
   policies: string
+  allDivisions: string
   kindergarten: string
   elementary: string
   intermediate: string
@@ -44,6 +45,7 @@ const navLabels: Record<'en' | 'ar' | 'fr', NavLabels> = {
     visionMission: 'Vision & Mission',
     history: 'History',
     policies: 'Policies',
+    allDivisions: 'All Divisions',
     kindergarten: 'Kindergarten',
     elementary: 'Elementary',
     intermediate: 'Intermediate',
@@ -68,6 +70,7 @@ const navLabels: Record<'en' | 'ar' | 'fr', NavLabels> = {
     visionMission: 'الرسالة والرؤية',
     history: 'تاريخنا',
     policies: 'السياسات',
+    allDivisions: 'كل الأقسام',
     kindergarten: 'الروضة',
     elementary: 'الابتدائي',
     intermediate: 'المتوسّط',
@@ -92,6 +95,7 @@ const navLabels: Record<'en' | 'ar' | 'fr', NavLabels> = {
     visionMission: 'Mission & Vision',
     history: 'Histoire',
     policies: 'Politiques',
+    allDivisions: 'Toutes les divisions',
     kindergarten: 'Maternelle',
     elementary: 'Primaire',
     intermediate: 'Intermédiaire',
@@ -123,6 +127,7 @@ function buildNav(l: NavLabels): NavItem[] {
     {
       label: l.divisions,
       children: [
+        { href: '/divisions', label: l.allDivisions },
         { href: '/kindergarten', label: l.kindergarten },
         { href: '/elementary', label: l.elementary },
         { href: '/intermediate', label: l.intermediate },
