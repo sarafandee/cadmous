@@ -67,9 +67,10 @@ function clearDraft() {
 
 type Props = {
   locale: string
+  appLang?: string
 }
 
-export function ApplicationWizard({ locale }: Props) {
+export function ApplicationWizard({ locale, appLang }: Props) {
   const t = useTranslations('admissions')
   const tc = useTranslations('common')
   const [currentStep, setCurrentStep] = useState(0)
@@ -159,14 +160,14 @@ export function ApplicationWizard({ locale }: Props) {
     }
 
     setIsSubmitting(true)
-    const result = await submitApplication(fullResult.data, locale)
+    const result = await submitApplication(fullResult.data, locale, appLang ?? locale)
     setSubmitResult(result)
     setIsSubmitting(false)
 
     if (result.success) {
       clearDraft()
     }
-  }, [methods, locale])
+  }, [methods, locale, appLang])
 
   // Success state
   if (submitResult?.success) {
