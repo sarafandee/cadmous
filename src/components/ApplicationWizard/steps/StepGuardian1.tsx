@@ -6,8 +6,10 @@ import { FormInput, FormSelect, FormRow } from '../FormField'
 export function StepGuardian1() {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Guardian 1</h3>
-      <p className="text-sm text-gray-500">
+      <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+        Guardian 1
+      </h3>
+      <p className="text-[13px] text-white/60">
         The first guardian to whom school reports and correspondence will be addressed.
       </p>
 

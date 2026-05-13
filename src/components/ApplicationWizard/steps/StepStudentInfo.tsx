@@ -6,7 +6,9 @@ import { FormInput, FormSelect, FormRow } from '../FormField'
 export function StepStudentInfo() {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Student Information</h3>
+      <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+        Student Information
+      </h3>
 
       <FormRow>
         <FormInput name="studentFirstName" label="First Name" required />
