@@ -16,9 +16,11 @@ export function StepFamily() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">Family Details</h3>
+        <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+          Family Details
+        </h3>
 
         <FormRow>
           <FormSelect
@@ -54,15 +56,16 @@ export function StepFamily() {
         )}
       </div>
 
-      {/* Siblings */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-lg font-medium">Other Children</h4>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h4 className="text-[17px] font-bold leading-[1.25] tracking-[-0.01em] text-white">
+            Other Children
+          </h4>
           {fields.length < 5 && (
             <button
               type="button"
               onClick={() => append({ name: '', grade: '', school: '', academicYear: '' })}
-              className="rounded-md border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50"
+              className="rounded-[4px] border border-white/20 px-[14px] py-[8px] text-[12px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5"
             >
               + Add Child
             </button>
@@ -70,13 +73,18 @@ export function StepFamily() {
         </div>
 
         {fields.map((field, index) => (
-          <div key={field.id} className="rounded-md border border-gray-200 p-4">
+          <div
+            key={field.id}
+            className="rounded-[6px] border border-white/10 bg-navy-900/40 p-5"
+          >
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-600">Child {index + 1}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
+                Child {index + 1}
+              </span>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-sm text-red-500 hover:text-red-700"
+                className="text-[12px] font-semibold text-crimson-400 transition hover:text-crimson-500"
               >
                 Remove
               </button>
@@ -109,15 +117,18 @@ export function StepFamily() {
         )}
       </div>
 
-      {/* Emergency Contacts */}
       <div className="space-y-4">
-        <h4 className="text-lg font-medium">Emergency Contacts</h4>
-        <p className="text-sm text-gray-500">
-          Please provide 2 people who can be contacted in case of emergency.
+        <h4 className="text-[17px] font-bold leading-[1.25] tracking-[-0.01em] text-white">
+          Emergency Contacts
+        </h4>
+        <p className="text-[13px] text-white/60">
+          Please provide two people who can be contacted in case of emergency.
         </p>
 
-        <div className="rounded-md border border-gray-200 p-4">
-          <span className="mb-3 block text-sm font-medium text-gray-600">Contact 1</span>
+        <div className="rounded-[6px] border border-white/10 bg-navy-900/40 p-5">
+          <span className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
+            Contact 1
+          </span>
           <FormRow>
             <FormInput name="emergency1Name" label="Name" required />
             <FormInput name="emergency1Relationship" label="Relationship" required />
@@ -125,8 +136,10 @@ export function StepFamily() {
           </FormRow>
         </div>
 
-        <div className="rounded-md border border-gray-200 p-4">
-          <span className="mb-3 block text-sm font-medium text-gray-600">Contact 2</span>
+        <div className="rounded-[6px] border border-white/10 bg-navy-900/40 p-5">
+          <span className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
+            Contact 2
+          </span>
           <FormRow>
             <FormInput name="emergency2Name" label="Name" required />
             <FormInput name="emergency2Relationship" label="Relationship" required />

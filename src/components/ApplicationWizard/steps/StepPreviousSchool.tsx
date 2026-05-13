@@ -12,7 +12,9 @@ export function StepPreviousSchool() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Previous School Information</h3>
+      <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+        Previous School Information
+      </h3>
 
       <FormInput name="previousSchool" label="Previous School" />
 

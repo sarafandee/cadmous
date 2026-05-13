@@ -6,8 +6,10 @@ import { FormInput, FormRow } from '../FormField'
 export function StepGuardian2() {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Guardian 2</h3>
-      <p className="text-sm text-gray-500">Optional. Fill in if applicable.</p>
+      <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+        Guardian 2
+      </h3>
+      <p className="text-[13px] text-white/60">Optional. Fill in if applicable.</p>
 
       <FormRow>
         <FormInput name="guardian2FullName" label="Full Name" />

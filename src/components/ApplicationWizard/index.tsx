@@ -172,11 +172,13 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   // Success state
   if (submitResult?.success) {
     return (
-      <div className="mx-auto max-w-2xl py-16 text-center">
-        <div className="mb-6 text-5xl">✓</div>
-        <h2 className="mb-4 text-3xl font-bold">{t('confirmationTitle')}</h2>
-        <p className="text-lg text-gray-600">{t('confirmationMessage')}</p>
-        <p className="mt-4 text-sm text-gray-500">
+      <div className="rounded-[6px] border border-crimson-400 bg-crimson-500/10 p-8 text-white">
+        <div className="mb-4 text-3xl">✓</div>
+        <h2 className="mb-2 text-2xl font-bold leading-tight tracking-[-0.015em]">
+          {t('confirmationTitle')}
+        </h2>
+        <p className="text-[15px] text-white/80">{t('confirmationMessage')}</p>
+        <p className="mt-4 text-[12px] uppercase tracking-[0.06em] text-white/40">
           Application ID: #{submitResult.id}
         </p>
       </div>
@@ -187,7 +189,7 @@ export function ApplicationWizard({ locale, appLang }: Props) {
   const isLastStep = currentStep === STEP_COMPONENTS.length - 1
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="w-full">
       <ProgressBar
         currentStep={currentStep}
         totalSteps={STEP_COMPONENTS.length}
@@ -195,23 +197,21 @@ export function ApplicationWizard({ locale, appLang }: Props) {
       />
 
       <FormProvider {...methods}>
-        <form onSubmit={(e) => e.preventDefault()} className="mt-8">
+        <form onSubmit={(e) => e.preventDefault()} className="mt-10">
           <StepComponent />
 
-          {/* Form-level error */}
           {submitResult && !submitResult.success && submitResult.errors._form && (
-            <div className="mt-4 rounded-md bg-red-50 p-4 text-sm text-red-700">
+            <div className="mt-4 rounded-[4px] border border-crimson-500 bg-crimson-500/10 p-4 text-[13px] text-crimson-400">
               {submitResult.errors._form}
             </div>
           )}
 
-          {/* Navigation */}
-          <div className="mt-8 flex justify-between">
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
             <button
               type="button"
               onClick={handlePrevious}
               disabled={currentStep === 0}
-              className="rounded-md border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
             >
               {tc('previous')}
             </button>
@@ -221,15 +221,15 @@ export function ApplicationWizard({ locale, appLang }: Props) {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="rounded-md bg-blue-900 px-8 py-2.5 text-sm font-medium text-white hover:bg-blue-800 disabled:opacity-50"
+                className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400 disabled:opacity-50"
               >
-                {isSubmitting ? '...' : t('applyNow')}
+                {isSubmitting ? '…' : t('applyNow')}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleNext}
-                className="rounded-md bg-blue-900 px-8 py-2.5 text-sm font-medium text-white hover:bg-blue-800"
+                className="rounded-[4px] border border-crimson-500 bg-crimson-500 px-[22px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
               >
                 {tc('next')}
               </button>
