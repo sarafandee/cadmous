@@ -38,8 +38,7 @@ type TKey =
   | 'eyebrowWelcome'
   | 'heroTitle'
   | 'heroLede'
-  | 'ctaVisit'
-  | 'ctaWatchTour'
+  | 'ctaApply'
   | 'factAges'
   | 'factAgesV'
   | 'factProgramme'
@@ -59,10 +58,6 @@ type TKey =
   | 'academicsEyebrow'
   | 'academicsTitle'
   | 'allDivisions'
-  | 'lebProgramme'
-  | 'intlProgramme'
-  | 'seeAllDivisions'
-  | 'aboutIB'
   | 'slabEyebrow'
   | 'slabTitle'
   | 'slabP1'
@@ -101,8 +96,7 @@ const T: Record<string, Record<TKey, string>> = {
     heroTitle: 'Bridging tradition with a curious, modern education.',
     heroLede:
       'From Kindergarten to Grade 12, we teach in English, French, and Arabic — and prepare every student to thrive at university and in the world beyond it.',
-    ctaVisit: 'Book a Campus Visit',
-    ctaWatchTour: 'Watch Campus Tour',
+    ctaApply: 'Apply to Cadmous',
     factAges: 'Ages',
     factAgesV: '3 – 18',
     factProgramme: 'Programme',
@@ -122,12 +116,8 @@ const T: Record<string, Record<TKey, string>> = {
       'The new facility brings robotics kits, a maker bench, and dedicated design space to students from Grade 6 onward — built around the IB approach to inquiry.',
     newsFeatureMeta: '8 Aug 2025 · 3 min read',
     academicsEyebrow: 'Academics',
-    academicsTitle: 'Two pathways. One school.',
+    academicsTitle: 'Six divisions. One school.',
     allDivisions: 'All divisions',
-    lebProgramme: 'Lebanese Programme',
-    intlProgramme: 'International Programmes',
-    seeAllDivisions: 'See all divisions →',
-    aboutIB: 'About the IB Diploma →',
     slabEyebrow: 'A school rooted in Tyre',
     slabTitle:
       'Almost half a century of educating the next generation of Lebanon.',
@@ -171,8 +161,7 @@ const T: Record<string, Record<TKey, string>> = {
     heroTitle: "Une tradition vivante, une éducation moderne et curieuse.",
     heroLede:
       "De la maternelle à la Terminale, nous enseignons en anglais, français et arabe — et préparons chaque élève à réussir à l'université et au-delà.",
-    ctaVisit: 'Réserver une visite',
-    ctaWatchTour: 'Voir la visite du campus',
+    ctaApply: 'Postuler à Cadmous',
     factAges: 'Âges',
     factAgesV: '3 – 18',
     factProgramme: 'Programme',
@@ -192,12 +181,8 @@ const T: Record<string, Record<TKey, string>> = {
       "Le nouveau laboratoire offre des kits de robotique, un atelier maker et un espace de design dédié aux élèves dès la 6e — pensé autour de l'approche IB.",
     newsFeatureMeta: '8 août 2025 · 3 min de lecture',
     academicsEyebrow: 'Académique',
-    academicsTitle: 'Deux parcours. Une seule école.',
+    academicsTitle: 'Six divisions. Une seule école.',
     allDivisions: 'Toutes les divisions',
-    lebProgramme: 'Programme libanais',
-    intlProgramme: 'Programmes internationaux',
-    seeAllDivisions: 'Voir toutes les divisions →',
-    aboutIB: 'À propos du Diplôme IB →',
     slabEyebrow: 'Une école enracinée à Tyr',
     slabTitle:
       'Près d’un demi-siècle au service de l’éducation au Liban.',
@@ -242,8 +227,7 @@ const T: Record<string, Record<TKey, string>> = {
     heroTitle: 'تعليم يصل التقليد بالفضول الحديث.',
     heroLede:
       'من رياض الأطفال إلى الصف الثاني عشر، ندرّس بالعربية والإنجليزية والفرنسية — ونعدّ كل طالب للتفوق في الجامعة وما بعدها.',
-    ctaVisit: 'احجز زيارة للحرم',
-    ctaWatchTour: 'شاهد جولة الحرم',
+    ctaApply: 'قدّم إلى قدموس',
     factAges: 'الأعمار',
     factAgesV: '3 – 18',
     factProgramme: 'البرنامج',
@@ -263,12 +247,8 @@ const T: Record<string, Record<TKey, string>> = {
       'يضم المختبر الجديد أدوات الروبوتات وورشة تصميم مخصصة للطلاب من الصف السادس وما فوق، وفق منهج البكالوريا الدولية.',
     newsFeatureMeta: '8 آب 2025 · قراءة 3 دقائق',
     academicsEyebrow: 'الأكاديميات',
-    academicsTitle: 'مساران. مدرسة واحدة.',
+    academicsTitle: 'ست أقسام. مدرسة واحدة.',
     allDivisions: 'كل الأقسام',
-    lebProgramme: 'البرنامج اللبناني',
-    intlProgramme: 'البرامج الدولية',
-    seeAllDivisions: 'عرض كل الأقسام ←',
-    aboutIB: 'حول دبلوم البكالوريا الدولية ←',
     slabEyebrow: 'مدرسة متجذّرة في صور',
     slabTitle: 'قرابة نصف قرن في تعليم أجيال لبنان.',
     slabP1:
@@ -347,63 +327,30 @@ const NEWS_STACK: Record<string, { date: string; title: string; body: string }[]
   ],
 }
 
-const LEBANESE_DIVISIONS: Record<string, { l: string; h: string }[]> = {
+const DIVISIONS: Record<string, { l: string; b: string; h: string }[]> = {
   en: [
-    { l: 'Kindergarten', h: '/kindergarten' },
-    { l: 'Elementary', h: '/elementary' },
-    { l: 'Intermediate', h: '/intermediate' },
-    { l: 'Sciences générales', h: '/secondary-lebanese' },
-    { l: 'Sciences de la vie', h: '/secondary-lebanese' },
-    { l: 'Sociology & Economics', h: '/secondary-lebanese' },
-    { l: 'Lettres et humanités', h: '/secondary-lebanese' },
-    { l: 'Integrative Program', h: '/integrative' },
+    { l: 'Kindergarten', b: 'From age 3 through Grade 1, in a nurturing environment built on play, curiosity, and creativity.', h: '/kindergarten' },
+    { l: 'Elementary', b: 'Foundational years from Grade 2 onward — literacy, numeracy, and the love of learning in three languages.', h: '/elementary' },
+    { l: 'Intermediate', b: 'Through Grade 9 and the Brevet — a stage of deeper inquiry and academic identity.', h: '/intermediate' },
+    { l: 'Secondary Lebanese', b: 'Grades 10–12 on the Lebanese curriculum, with General Sciences, Life Sciences, and Sociology & Economics streams.', h: '/secondary-lebanese' },
+    { l: 'Integrative Program', b: 'An inclusive learning track for students who benefit from individualised support, woven into mainstream school life.', h: '/integrative' },
+    { l: 'International Programmes', b: 'The IB Diploma (Y11–Y12), the International Programme (Y9–Y10), and SAT preparation.', h: '/international-programs' },
   ],
   fr: [
-    { l: 'Maternelle', h: '/kindergarten' },
-    { l: 'Primaire', h: '/elementary' },
-    { l: 'Collège', h: '/intermediate' },
-    { l: 'Sciences générales', h: '/secondary-lebanese' },
-    { l: 'Sciences de la vie', h: '/secondary-lebanese' },
-    { l: 'Sociologie & Économie', h: '/secondary-lebanese' },
-    { l: 'Lettres et humanités', h: '/secondary-lebanese' },
-    { l: 'Programme intégratif', h: '/integrative' },
+    { l: 'Maternelle', b: "Dès 3 ans et jusqu'à la 1re année, dans un cadre bienveillant fondé sur le jeu, la curiosité et la créativité.", h: '/kindergarten' },
+    { l: 'Primaire', b: "Les années fondatrices à partir de la 2e année — lecture, calcul et goût d'apprendre en trois langues.", h: '/elementary' },
+    { l: 'Collège', b: "Jusqu'à la 9e et au Brevet — une étape de questionnement et d'affirmation scolaire.", h: '/intermediate' },
+    { l: 'Secondaire libanais', b: 'De la 10e à la 12e sur le programme libanais, avec les sections Sciences générales, Sciences de la vie et Sociologie & Économie.', h: '/secondary-lebanese' },
+    { l: 'Programme intégratif', b: "Un parcours inclusif pour les élèves qui bénéficient d'un soutien personnalisé, intégré à la vie scolaire.", h: '/integrative' },
+    { l: 'Programmes internationaux', b: 'Le Diplôme IB (Y11–Y12), le Programme international (Y9–Y10) et la préparation au SAT.', h: '/international-programs' },
   ],
   ar: [
-    { l: 'الروضة', h: '/kindergarten' },
-    { l: 'الابتدائية', h: '/elementary' },
-    { l: 'المتوسّطة', h: '/intermediate' },
-    { l: 'العلوم العامة', h: '/secondary-lebanese' },
-    { l: 'علوم الحياة', h: '/secondary-lebanese' },
-    { l: 'علم الاجتماع والاقتصاد', h: '/secondary-lebanese' },
-    { l: 'الآداب والإنسانيات', h: '/secondary-lebanese' },
-    { l: 'البرنامج التكاملي', h: '/integrative' },
-  ],
-}
-
-const INTL_DIVISIONS: Record<string, { l: string; h: string }[]> = {
-  en: [
-    { l: 'IB Diploma Programme', h: '/international-programs' },
-    { l: 'IGCSE Pathway', h: '/international-programs' },
-    { l: 'Theory of Knowledge', h: '/international-programs' },
-    { l: 'Extended Essay', h: '/international-programs' },
-    { l: 'Creativity, Activity, Service', h: '/international-programs' },
-    { l: 'University Counselling', h: '/international-programs' },
-  ],
-  fr: [
-    { l: 'Diplôme IB', h: '/international-programs' },
-    { l: 'Parcours IGCSE', h: '/international-programs' },
-    { l: 'Théorie de la connaissance', h: '/international-programs' },
-    { l: 'Mémoire (Extended Essay)', h: '/international-programs' },
-    { l: 'Créativité, Activité, Service', h: '/international-programs' },
-    { l: 'Orientation universitaire', h: '/international-programs' },
-  ],
-  ar: [
-    { l: 'دبلوم البكالوريا الدولية', h: '/international-programs' },
-    { l: 'مسار IGCSE', h: '/international-programs' },
-    { l: 'نظرية المعرفة', h: '/international-programs' },
-    { l: 'البحث المعمّق', h: '/international-programs' },
-    { l: 'الإبداع والنشاط والخدمة', h: '/international-programs' },
-    { l: 'الإرشاد الجامعي', h: '/international-programs' },
+    { l: 'الروضة', b: 'من عمر الثلاث سنوات حتى الصفّ الأوّل، في بيئة حاضنة قائمة على اللعب والفضول والإبداع.', h: '/kindergarten' },
+    { l: 'الابتدائيّة', b: 'السنوات التأسيسيّة من الصفّ الثاني فصاعدًا — القراءة والحساب وحبّ التعلّم بثلاث لغات.', h: '/elementary' },
+    { l: 'المتوسّطة', b: 'حتى الصفّ التاسع والشهادة المتوسّطة — مرحلة تعمّق وبناء هويّة أكاديميّة.', h: '/intermediate' },
+    { l: 'الثانوي اللبناني', b: 'من الصفّ العاشر حتى الثاني عشر على المنهج اللبنانيّ، بفروع العلوم العامّة، علوم الحياة، الاجتماع والاقتصاد.', h: '/secondary-lebanese' },
+    { l: 'البرنامج التكاملي', b: 'مسار تعلّم شامل للطلّاب الذين يستفيدون من دعم فرديّ، ضمن الحياة المدرسيّة العامّة.', h: '/integrative' },
+    { l: 'البرامج الدوليّة', b: 'دبلوم البكالوريا الدوليّة (الصفّان 11 و12)، البرنامج الدوليّ (الصفّان 9 و10)، وتحضير SAT.', h: '/international-programs' },
   ],
 }
 
@@ -513,8 +460,7 @@ export default async function HomePage({ params }: Args) {
   const announcements = liveAnnouncements.length > 0
     ? liveAnnouncements.slice(0, 4).map((a) => ({ t: a.title, b: a.body || '' }))
     : announcementsFallback
-  const lebanese = LEBANESE_DIVISIONS[locale] || LEBANESE_DIVISIONS.en
-  const intl = INTL_DIVISIONS[locale] || INTL_DIVISIONS.en
+  const divisions = DIVISIONS[locale] || DIVISIONS.en
   const whyItems = WHY_ITEMS[locale] || WHY_ITEMS.en
   const scholarships = SCHOLARSHIPS[locale] || SCHOLARSHIPS.en
   const voices = VOICES[locale] || VOICES.en
@@ -529,8 +475,29 @@ export default async function HomePage({ params }: Args) {
 
   return (
     <div className="bg-navy-900 text-[#f4f5f8]">
+      {/* ANNOUNCE */}
+      <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-6">
+        <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-[180px_1fr_1fr_1fr_1fr]">
+          <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
+            <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
+            {l.announceLabel}
+          </div>
+          {announcements.map((it, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
+              <p className="m-0 text-[13px] leading-[1.5] text-white/70">
+                <strong className="mb-1 block text-[13.5px] font-semibold text-white">
+                  {it.t}
+                </strong>
+                {it.b}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* HERO */}
-      <section className="relative flex min-h-[86vh] items-center overflow-hidden border-b border-white/10 px-[clamp(20px,4vw,48px)] pt-[110px] pb-[120px]">
+      <section className="relative flex min-h-[72vh] items-center overflow-hidden border-b border-white/10 px-[clamp(20px,4vw,48px)] pt-20 pb-24">
         <div className="absolute inset-0 z-0">
           <img src={HERO_IMG} alt="Campus" className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-br from-[rgba(14,26,48,0.96)] via-[rgba(22,36,63,0.85)] to-[rgba(22,36,63,0.55)]" />
@@ -547,19 +514,11 @@ export default async function HomePage({ params }: Args) {
           </p>
           <div className="flex flex-wrap items-center gap-[18px]">
             <Link
-              href={'/contact'}
+              href={'/admissions'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-crimson-500 bg-crimson-500 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
             >
-              {l.ctaVisit}
+              {l.ctaApply}
             </Link>
-            <a href="#tour" className="group inline-flex items-center gap-3 text-sm font-semibold text-[#f4f5f8]">
-              <span className="grid h-12 w-12 place-items-center rounded-full border-[1.5px] border-crimson-400 bg-crimson-500/20 backdrop-blur-sm transition group-hover:scale-105 group-hover:border-crimson-500 group-hover:bg-crimson-500">
-                <svg viewBox="0 0 16 16" className="ml-[2px] h-[14px] w-[14px] fill-white">
-                  <path d="M3 1.5L13 8 3 14.5z" />
-                </svg>
-              </span>
-              <span>{l.ctaWatchTour}</span>
-            </a>
           </div>
           <div className="mt-8 flex max-w-[760px] flex-wrap overflow-hidden rounded-[6px] border border-white/20 bg-[rgba(14,26,48,0.45)] backdrop-blur-sm">
             {[
@@ -581,27 +540,6 @@ export default async function HomePage({ params }: Args) {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ANNOUNCE */}
-      <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-8">
-        <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-8 sm:grid-cols-2 lg:grid-cols-[200px_1fr_1fr_1fr_1fr]">
-          <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
-            <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
-            {l.announceLabel}
-          </div>
-          {announcements.map((it, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
-              <p className="m-0 text-[13px] leading-[1.55] text-white/70">
-                <strong className="mb-1 block text-[13.5px] font-semibold text-white">
-                  {it.t}
-                </strong>
-                {it.b}
-              </p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -684,47 +622,31 @@ export default async function HomePage({ params }: Args) {
           <SectionHead
             eyebrow={l.academicsEyebrow}
             title={l.academicsTitle}
-            link={{ href: '/kindergarten', label: l.allDivisions }}
+            link={{ href: '/divisions', label: l.allDivisions }}
           />
-          <div className="grid gap-6 lg:grid-cols-2">
-            <AcademicsCol
-              title={l.lebProgramme}
-              icon={
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M3 7l9-4 9 4-9 4-9-4z" />
-                  <path d="M3 7v6c0 2 4 4 9 4s9-2 9-4V7" />
-                </svg>
-              }
-              items={lebanese}
-              ctaLabel={l.seeAllDivisions}
-              ctaHref={'/kindergarten'}
-            />
-            <AcademicsCol
-              title={l.intlProgramme}
-              icon={
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
-                </svg>
-              }
-              items={intl}
-              ctaLabel={l.aboutIB}
-              ctaHref={'/international-programs'}
-            />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {divisions.map((d, i) => (
+              <Link
+                key={d.h}
+                href={d.h}
+                className="group flex flex-col rounded-[6px] border border-white/10 bg-navy-900 p-7 transition hover:-translate-y-0.5 hover:border-white/20"
+              >
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="grid h-11 w-11 place-items-center rounded-lg border border-crimson-400 bg-crimson-500/10 font-bold tracking-[-0.02em] text-crimson-400">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 className="mb-2 text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
+                  {d.l}
+                </h3>
+                <p className="mb-5 flex-1 text-[14px] leading-[1.5] text-white/70">
+                  {d.b}
+                </p>
+                <div className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-crimson-400 transition group-hover:text-crimson-500">
+                  {l.learnMore}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -983,16 +905,16 @@ export default async function HomePage({ params }: Args) {
           <p className="mb-8 max-w-[56ch] text-[17px] text-white">{l.dreamsBody}</p>
           <div className="flex flex-wrap gap-3.5">
             <Link
-              href={'/contact'}
+              href={'/admissions'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-crimson-500 bg-crimson-500 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-crimson-400 hover:bg-crimson-400"
             >
-              {l.ctaVisit}
+              {l.dreamsApply}
             </Link>
             <Link
-              href={'/requirements'}
+              href={'/contact'}
               className="inline-flex items-center gap-2 rounded-[4px] border border-white/20 px-[18px] py-[10px] text-[13px] font-semibold tracking-[0.02em] text-white transition hover:border-white/40 hover:bg-white/5"
             >
-              {l.dreamsApply}
+              {l.faqContact}
             </Link>
           </div>
         </div>
@@ -1054,51 +976,6 @@ function SectionHead({
           {link.label} →
         </a>
       )}
-    </div>
-  )
-}
-
-function AcademicsCol({
-  title,
-  icon,
-  items,
-  ctaLabel,
-  ctaHref,
-}: {
-  title: string
-  icon: React.ReactNode
-  items: { l: string; h: string }[]
-  ctaLabel: string
-  ctaHref: string
-}) {
-  return (
-    <div className="rounded-[6px] border border-white/10 bg-navy-900 p-9">
-      <h3 className="mb-6 flex items-center gap-3 text-[22px] font-bold tracking-[-0.015em] text-white">
-        <span className="grid h-11 w-11 place-items-center rounded-lg border border-crimson-400 bg-crimson-500/10 text-crimson-400">
-          {icon}
-        </span>
-        {title}
-      </h3>
-      <div className="grid gap-x-6 sm:grid-cols-2">
-        {items.map((it, i) => (
-          <Link
-            key={i}
-            href={it.h}
-            className="group flex items-center justify-between border-b border-white/10 py-[14px] text-[14.5px] font-medium text-white/70 transition hover:text-white"
-          >
-            <span>{it.l}</span>
-            <span className="text-[13px] opacity-50 transition group-hover:translate-x-0.5 group-hover:text-crimson-400 group-hover:opacity-100">
-              →
-            </span>
-          </Link>
-        ))}
-      </div>
-      <Link
-        href={ctaHref}
-        className="mt-[22px] inline-flex items-center gap-1.5 text-[13px] font-semibold text-crimson-400 hover:text-crimson-500"
-      >
-        {ctaLabel}
-      </Link>
     </div>
   )
 }
