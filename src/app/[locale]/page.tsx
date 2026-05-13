@@ -475,29 +475,8 @@ export default async function HomePage({ params }: Args) {
 
   return (
     <div className="bg-navy-900 text-[#f4f5f8]">
-      {/* ANNOUNCE */}
-      <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-6">
-        <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-[180px_1fr_1fr_1fr_1fr]">
-          <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
-            <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
-            {l.announceLabel}
-          </div>
-          {announcements.map((it, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
-              <p className="m-0 text-[13px] leading-[1.5] text-white/70">
-                <strong className="mb-1 block text-[13.5px] font-semibold text-white">
-                  {it.t}
-                </strong>
-                {it.b}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* HERO */}
-      <section className="relative flex min-h-[72vh] items-center overflow-hidden border-b border-white/10 px-[clamp(20px,4vw,48px)] pt-20 pb-24">
+      <section className="relative flex min-h-[68vh] items-center overflow-hidden border-b border-white/10 px-[clamp(20px,4vw,48px)] pt-[100px] pb-20">
         <div className="absolute inset-0 z-0">
           <img src={HERO_IMG} alt="Campus" className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-br from-[rgba(14,26,48,0.96)] via-[rgba(22,36,63,0.85)] to-[rgba(22,36,63,0.55)]" />
@@ -540,6 +519,27 @@ export default async function HomePage({ params }: Args) {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ANNOUNCE */}
+      <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-6">
+        <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-[180px_1fr_1fr_1fr_1fr]">
+          <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
+            <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
+            {l.announceLabel}
+          </div>
+          {announcements.map((it, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
+              <p className="m-0 text-[13px] leading-[1.5] text-white/70">
+                <strong className="mb-1 block text-[13.5px] font-semibold text-white">
+                  {it.t}
+                </strong>
+                {it.b}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
