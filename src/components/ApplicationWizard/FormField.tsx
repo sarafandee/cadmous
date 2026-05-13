@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
+
+import { useFormLabels } from './labels-context'
 import type { ApplicationFormData } from './schema'
 
 const inputClass =
@@ -63,6 +65,7 @@ type SelectProps = {
 
 export function FormSelect({ name, label, required, options, placeholder }: SelectProps) {
   const { register, formState: { errors } } = useFormContext<ApplicationFormData>()
+  const labels = useFormLabels()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error = name.split('.').reduce((obj: any, key) => obj?.[key], errors)
   const borderClass = error ? 'border-crimson-500' : 'border-white/10'
@@ -79,7 +82,7 @@ export function FormSelect({ name, label, required, options, placeholder }: Sele
         className={`${inputClass} ${borderClass} appearance-none`}
       >
         <option value="" disabled className="bg-navy-800 text-white/40">
-          {placeholder ?? 'Select…'}
+          {placeholder ?? labels.selectPlaceholder}
         </option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value} className="bg-navy-800 text-white">

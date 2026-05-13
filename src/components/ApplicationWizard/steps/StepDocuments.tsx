@@ -2,12 +2,10 @@
 
 import React, { useState } from 'react'
 
-import {
-  DOCUMENT_KINDS,
-  DOCUMENT_KIND_LABELS,
-  MAX_UPLOAD_BYTES,
-  type DocumentKind,
-} from '@/lib/applications/documents'
+import { MAX_UPLOAD_BYTES, DOCUMENT_KINDS, type DocumentKind } from '@/lib/applications/documents'
+
+import { useFormLabels } from '../labels-context'
+import type { FormLabels } from '../labels'
 
 export type UploadedDoc = {
   id: string
@@ -26,6 +24,16 @@ type Props = {
 
 const ACCEPT = '.pdf,.jpg,.jpeg,.png,.webp'
 
+const KIND_LABEL_KEYS: Record<DocumentKind, keyof FormLabels> = {
+  passport: 'kindPassport',
+  passport_photos: 'kindPassportPhotos',
+  report_card: 'kindReportCard',
+  medical: 'kindMedical',
+  passing_cert: 'kindPassingCert',
+  brevet: 'kindBrevet',
+  other: 'kindOther',
+}
+
 function humanSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
@@ -33,16 +41,14 @@ function humanSize(bytes: number): string {
 }
 
 export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
+  const l = useFormLabels()
   const [busyKind, setBusyKind] = useState<DocumentKind | null>(null)
   const [errors, setErrors] = useState<Partial<Record<DocumentKind, string>>>({})
 
   async function handleFile(kind: DocumentKind, file: File) {
     setErrors((e) => ({ ...e, [kind]: undefined }))
     if (file.size > MAX_UPLOAD_BYTES) {
-      setErrors((e) => ({
-        ...e,
-        [kind]: `File too large (max ${Math.floor(MAX_UPLOAD_BYTES / (1024 * 1024))}MB)`,
-      }))
+      setErrors((e) => ({ ...e, [kind]: l.fileTooLarge }))
       return
     }
 
@@ -58,7 +64,7 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
       })
       const json = await res.json()
       if (!res.ok) {
-        setErrors((e) => ({ ...e, [kind]: json.error ?? 'Upload failed' }))
+        setErrors((e) => ({ ...e, [kind]: json.error ?? l.networkError }))
         return
       }
       onAdded({
@@ -69,7 +75,7 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
         size: json.size,
       })
     } catch {
-      setErrors((e) => ({ ...e, [kind]: 'Network error — please try again' }))
+      setErrors((e) => ({ ...e, [kind]: l.networkError }))
     } finally {
       setBusyKind(null)
     }
@@ -78,13 +84,9 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
   return (
     <div className="space-y-5">
       <h3 className="text-[20px] font-bold leading-[1.25] tracking-[-0.015em] text-white">
-        Required Documents
+        {l.documentsTitle}
       </h3>
-      <p className="text-[13px] text-white/60">
-        Please upload PDF or image files (JPG / PNG / WebP), max{' '}
-        {Math.floor(MAX_UPLOAD_BYTES / (1024 * 1024))}MB each. Brevet certificate is
-        required only for Grade 11 applicants.
-      </p>
+      <p className="text-[13px] text-white/60">{l.documentsHelper}</p>
 
       <div className="space-y-3">
         {DOCUMENT_KINDS.map((kind) => {
@@ -97,11 +99,11 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-[14px] font-semibold text-white">
-                    {DOCUMENT_KIND_LABELS[kind]}
+                    {l[KIND_LABEL_KEYS[kind]]}
                   </div>
                   {files.length === 0 && (
                     <div className="mt-1 text-[12px] text-white/40">
-                      No file uploaded
+                      {l.noFileUploaded}
                     </div>
                   )}
                 </div>
@@ -118,10 +120,10 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
                     }}
                   />
                   {busyKind === kind
-                    ? 'Uploading…'
+                    ? l.uploading
                     : files.length > 0
-                      ? '+ Add another'
-                      : '+ Upload'}
+                      ? l.addAnother
+                      : l.upload}
                 </label>
               </div>
 
@@ -144,7 +146,7 @@ export function StepDocuments({ draftId, uploads, onAdded, onRemoved }: Props) {
                         onClick={() => onRemoved(f.id)}
                         className="shrink-0 text-[12px] font-semibold text-crimson-400 transition hover:text-crimson-500"
                       >
-                        Remove
+                        {l.remove}
                       </button>
                     </li>
                   ))}
