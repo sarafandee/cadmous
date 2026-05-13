@@ -289,6 +289,9 @@ export const HeaderClient: React.FC = () => {
 
   useEffect(() => {
     setIsMobileOpen(false)
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
   }, [pathname])
 
   const l = navLabels[locale] ?? navLabels.en
