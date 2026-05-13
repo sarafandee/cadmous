@@ -288,27 +288,6 @@ const T: Record<string, Record<TKey, string>> = {
   },
 }
 
-const ANNOUNCEMENTS: Record<string, { t: string; b: string }[]> = {
-  en: [
-    { t: 'New Innovation Lab', b: 'Our new STEAM lab opens this term — student-built robotics, design, and biology projects on display.' },
-    { t: 'Open Day · 14 Nov', b: 'Tour the campus, meet our teachers, and see lessons in action across every division.' },
-    { t: 'IB Authorisation', b: 'Cadmous is now an authorised IB World School delivering the Diploma Programme in Grades 11 – 12.' },
-    { t: 'Community Service', b: 'Grade 10 students completed a coastal clean-up across three Tyre beaches as part of CAS.' },
-  ],
-  fr: [
-    { t: 'Nouveau laboratoire', b: 'Notre nouveau labo STEAM ouvre ce trimestre — projets de robotique, design et biologie réalisés par les élèves.' },
-    { t: 'Journée portes ouvertes · 14 nov.', b: "Visitez le campus, rencontrez les enseignants et observez des cours dans chaque division." },
-    { t: 'Autorisation IB', b: "Cadmous est désormais une École du monde de l'IB autorisée pour le Diplôme en 1re et Terminale." },
-    { t: 'Service communautaire', b: "Les élèves de 2nde ont nettoyé trois plages de Tyr dans le cadre du CAS." },
-  ],
-  ar: [
-    { t: 'مختبر الابتكار الجديد', b: 'يفتتح مختبر STEAM الجديد هذا الفصل — مشاريع روبوتات وتصميم وبيولوجيا من إنجاز الطلاب.' },
-    { t: 'يوم مفتوح · 14 تشرين الثاني', b: 'جولة في الحرم ولقاء مع المعلّمين ومشاهدة الدروس في كل المراحل.' },
-    { t: 'اعتماد البكالوريا الدولية', b: 'قدموس مدرسة معتمدة لدبلوم البكالوريا الدولية في الصفّين 11 و12.' },
-    { t: 'خدمة المجتمع', b: 'طلاب الصف العاشر يشاركون في حملة تنظيف ثلاث شواطئ في صور ضمن برنامج CAS.' },
-  ],
-}
-
 const NEWS_STACK: Record<string, { date: string; title: string; body: string }[]> = {
   en: [
     { date: '5 Jul 2025 · Academics', title: 'How Our IB Cohort Is Changing the Way We Teach Science', body: 'A note from the Head of Sciences on what we have learned this year.' },
@@ -456,10 +435,9 @@ export default async function HomePage({ params }: Args) {
   const featuredPost = posts[0]
   const stackPosts = posts.slice(1, 4)
   const stackFallback = NEWS_STACK[locale] || NEWS_STACK.en
-  const announcementsFallback = ANNOUNCEMENTS[locale] || ANNOUNCEMENTS.en
-  const announcements = liveAnnouncements.length > 0
-    ? liveAnnouncements.slice(0, 4).map((a) => ({ t: a.title, b: a.body || '' }))
-    : announcementsFallback
+  const announcements = liveAnnouncements
+    .slice(0, 4)
+    .map((a) => ({ t: a.title, b: a.body || '' }))
   const divisions = DIVISIONS[locale] || DIVISIONS.en
   const whyItems = WHY_ITEMS[locale] || WHY_ITEMS.en
   const scholarships = SCHOLARSHIPS[locale] || SCHOLARSHIPS.en
@@ -523,25 +501,27 @@ export default async function HomePage({ params }: Args) {
       </section>
 
       {/* ANNOUNCE */}
-      <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-6">
-        <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-[180px_1fr_1fr_1fr_1fr]">
-          <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
-            <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
-            {l.announceLabel}
-          </div>
-          {announcements.map((it, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
-              <p className="m-0 text-[13px] leading-[1.5] text-white/70">
-                <strong className="mb-1 block text-[13.5px] font-semibold text-white">
-                  {it.t}
-                </strong>
-                {it.b}
-              </p>
+      {announcements.length > 0 && (
+        <section className="border-b border-white/10 bg-navy-800 px-[clamp(20px,4vw,48px)] py-6">
+          <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-[180px_1fr_1fr_1fr_1fr]">
+            <div className="pt-[6px] text-[11px] font-bold uppercase tracking-[0.18em] text-crimson-400">
+              <span className="me-3 inline-block h-[1.5px] w-6 bg-crimson-400 align-middle" />
+              {l.announceLabel}
             </div>
-          ))}
-        </div>
-      </section>
+            {announcements.map((it) => (
+              <div key={it.t} className="flex items-start gap-3">
+                <span className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full bg-crimson-500" />
+                <p className="m-0 text-[13px] leading-[1.5] text-white/70">
+                  <strong className="mb-1 block text-[13.5px] font-semibold text-white">
+                    {it.t}
+                  </strong>
+                  {it.b}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CAMPUS NEWS */}
       <section className="px-[clamp(20px,4vw,48px)] py-20">
