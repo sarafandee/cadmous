@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { PageHeader, Section } from '@/components/CadmousUI'
+import { RichBody } from '@/components/RichBody'
 import { getEventBySlug } from '@/lib/content/events'
+import { htmlToPlain } from '@/lib/sanitize-html'
 
 type Args = {
   params: Promise<{ locale: string; slug: string }>
@@ -33,6 +35,12 @@ export default async function EventDetailPage({ params }: Args) {
     minute: '2-digit',
   })
 
+  // The header lede gets a one-line preview; the full (potentially rich) body
+  // renders below, so we strip tags from the description for the lede.
+  const ledePreview = event.description
+    ? htmlToPlain(event.description).slice(0, 220)
+    : undefined
+
   return (
     <>
       <PageHeader
@@ -42,7 +50,7 @@ export default async function EventDetailPage({ params }: Args) {
           { label: bc.events, href: '/events' },
           { label: event.title },
         ]}
-        lede={event.description}
+        lede={ledePreview}
       />
       <Section>
         <article className="mx-auto max-w-3xl">
@@ -61,6 +69,12 @@ export default async function EventDetailPage({ params }: Args) {
               </>
             )}
           </div>
+          {event.description && (
+            <RichBody
+              html={event.description}
+              className="mt-8 text-[16px] leading-[1.7] text-white/75"
+            />
+          )}
         </article>
       </Section>
     </>

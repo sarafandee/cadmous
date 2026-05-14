@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { PageHeader, Section } from '@/components/CadmousUI'
+import { RichBody } from '@/components/RichBody'
 import { getNewsBySlug } from '@/lib/content/news'
 
 type Args = {
@@ -48,9 +49,10 @@ export default async function NewsDetailPage({ params }: Args) {
             </div>
           )}
           {post.body && (
-            <div className="whitespace-pre-line text-[17px] leading-[1.75] text-white/70">
-              {post.body}
-            </div>
+            <RichBody
+              html={post.body}
+              className="text-[17px] leading-[1.75] text-white/70"
+            />
           )}
         </article>
       </Section>

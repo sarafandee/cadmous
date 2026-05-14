@@ -17,8 +17,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Textarea } from '@/components/ui/textarea'
 import { LOCALES, type Locale } from '@/db/schema/content'
+
+import { RichTextEditor } from '../../_components/RichTextEditor'
 
 import {
   createAnnouncementAction,
@@ -258,7 +259,12 @@ export function AnnouncementForm(props: AnnouncementFormProps) {
                     <FormItem>
                       <FormLabel>Body</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={6} />
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                          dir={l === 'ar' ? 'rtl' : 'ltr'}
+                          minHeight={180}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

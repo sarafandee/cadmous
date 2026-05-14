@@ -10,6 +10,7 @@ import type { Locale } from '@/db/schema/content'
 import { writeAudit } from '@/lib/admin/audit'
 import { requireAdmin } from '@/lib/admin/require-admin'
 import { EVENTS_CACHE_TAGS } from '@/lib/content/events'
+import { sanitizeRichText } from '@/lib/sanitize-html'
 import { translateField } from '@/lib/translate'
 import { eventFormSchema, type EventFormValues } from './schema'
 
@@ -77,7 +78,7 @@ export async function createEventAction(values: EventFormValues): Promise<Action
       eventId: id,
       locale: l,
       title: v.translations[l].title,
-      description: v.translations[l].description,
+      description: sanitizeRichText(v.translations[l].description),
       machineTranslated: v.translations[l].machineTranslated,
     })),
   )
@@ -129,20 +130,21 @@ export async function updateEventAction(
 
   for (const l of LOCALES) {
     const t = v.translations[l]
+    const description = sanitizeRichText(t.description)
     await db
       .insert(eventTranslations)
       .values({
         eventId: id,
         locale: l,
         title: t.title,
-        description: t.description,
+        description,
         machineTranslated: t.machineTranslated,
       })
       .onConflictDoUpdate({
         target: [eventTranslations.eventId, eventTranslations.locale],
         set: {
           title: t.title,
-          description: t.description,
+          description,
           machineTranslated: t.machineTranslated,
         },
       })
