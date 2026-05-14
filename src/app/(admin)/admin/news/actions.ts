@@ -10,6 +10,7 @@ import type { Locale } from '@/db/schema/content'
 import { writeAudit } from '@/lib/admin/audit'
 import { requireAdmin } from '@/lib/admin/require-admin'
 import { NEWS_CACHE_TAGS } from '@/lib/content/news'
+import { sanitizeRichText } from '@/lib/sanitize-html'
 import { translateField } from '@/lib/translate'
 import { newsFormSchema, type NewsFormValues } from './schema'
 
@@ -82,7 +83,7 @@ export async function createNewsAction(values: NewsFormValues): Promise<ActionRe
       locale: l,
       title: v.translations[l].title,
       summary: v.translations[l].summary,
-      body: v.translations[l].body,
+      body: sanitizeRichText(v.translations[l].body),
       machineTranslated: v.translations[l].machineTranslated,
     })),
   )
@@ -139,6 +140,7 @@ export async function updateNewsAction(
 
   for (const l of LOCALES) {
     const t = v.translations[l]
+    const body = sanitizeRichText(t.body)
     await db
       .insert(newsTranslations)
       .values({
@@ -146,7 +148,7 @@ export async function updateNewsAction(
         locale: l,
         title: t.title,
         summary: t.summary,
-        body: t.body,
+        body,
         machineTranslated: t.machineTranslated,
       })
       .onConflictDoUpdate({
@@ -154,7 +156,7 @@ export async function updateNewsAction(
         set: {
           title: t.title,
           summary: t.summary,
-          body: t.body,
+          body,
           machineTranslated: t.machineTranslated,
         },
       })

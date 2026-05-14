@@ -22,6 +22,7 @@ import { LOCALES, type Locale } from '@/db/schema/content'
 import { slugify } from '@/lib/admin/slug'
 
 import { MediaPicker } from '../../_components/MediaPicker'
+import { RichTextEditor } from '../../_components/RichTextEditor'
 
 import {
   createNewsAction,
@@ -298,7 +299,12 @@ export function NewsForm(props: NewsFormProps) {
                     <FormItem>
                       <FormLabel>Body</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={14} />
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                          dir={l === 'ar' ? 'rtl' : 'ltr'}
+                          minHeight={320}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

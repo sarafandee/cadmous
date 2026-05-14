@@ -10,6 +10,7 @@ import type { Locale } from '@/db/schema/content'
 import { writeAudit } from '@/lib/admin/audit'
 import { requireAdmin } from '@/lib/admin/require-admin'
 import { ANNOUNCEMENTS_CACHE_TAGS } from '@/lib/content/announcements'
+import { sanitizeRichText } from '@/lib/sanitize-html'
 import { translateField } from '@/lib/translate'
 import {
   announcementFormSchema,
@@ -60,7 +61,7 @@ export async function createAnnouncementAction(
       announcementId: id,
       locale: l,
       title: v.translations[l].title,
-      body: v.translations[l].body,
+      body: sanitizeRichText(v.translations[l].body),
       machineTranslated: v.translations[l].machineTranslated,
     })),
   )
@@ -107,20 +108,21 @@ export async function updateAnnouncementAction(
 
   for (const l of LOCALES) {
     const t = v.translations[l]
+    const body = sanitizeRichText(t.body)
     await db
       .insert(announcementTranslations)
       .values({
         announcementId: id,
         locale: l,
         title: t.title,
-        body: t.body,
+        body,
         machineTranslated: t.machineTranslated,
       })
       .onConflictDoUpdate({
         target: [announcementTranslations.announcementId, announcementTranslations.locale],
         set: {
           title: t.title,
-          body: t.body,
+          body,
           machineTranslated: t.machineTranslated,
         },
       })

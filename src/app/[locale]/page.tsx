@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { getActiveAnnouncements } from '@/lib/content/announcements'
 import { getAllNews } from '@/lib/content/news'
 import { getAllEvents } from '@/lib/content/events'
+import { htmlToPlain } from '@/lib/sanitize-html'
 
 type Args = {
   params: Promise<{ locale: string }>
@@ -437,7 +438,7 @@ export default async function HomePage({ params }: Args) {
   const stackFallback = NEWS_STACK[locale] || NEWS_STACK.en
   const announcements = liveAnnouncements
     .slice(0, 4)
-    .map((a) => ({ t: a.title, b: a.body || '' }))
+    .map((a) => ({ t: a.title, b: htmlToPlain(a.body || '') }))
   const divisions = DIVISIONS[locale] || DIVISIONS.en
   const whyItems = WHY_ITEMS[locale] || WHY_ITEMS.en
   const scholarships = SCHOLARSHIPS[locale] || SCHOLARSHIPS.en
